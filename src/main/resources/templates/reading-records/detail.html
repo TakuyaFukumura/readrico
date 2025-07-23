@@ -175,7 +175,7 @@
                 <div class="progress-section">
                     <div class="progress-bar">
                         <div class="progress-fill" 
-                             th:style="'width: ' + ${readingRecord.currentPage * 100 / readingRecord.totalPages} + '%'"></div>
+                             th:style="'width: ' + ${progressPercent} + '%'"></div>
                     </div>
                     <div class="progress-text" 
                          th:text="${readingRecord.currentPage} + ' / ' + ${readingRecord.totalPages} + ' ページ'">

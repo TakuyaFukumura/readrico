@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 @Controller
@@ -56,6 +58,16 @@ public class ReadingRecordController {
         if (readingRecord.isEmpty()) {
             return "redirect:/reading-records";
         }
+
+        // 進捗率の計算
+        int progressPercent = 0;
+        if (readingRecord.get().getTotalPages() > 0) {
+            BigDecimal currentPage = BigDecimal.valueOf(readingRecord.get().getCurrentPage());
+            BigDecimal totalPages = BigDecimal.valueOf(readingRecord.get().getTotalPages());
+            progressPercent = currentPage.multiply(BigDecimal.valueOf(100))
+                    .divide(totalPages, RoundingMode.HALF_UP).intValue();
+        }
+        model.addAttribute("progressPercent", progressPercent);
 
         model.addAttribute("readingRecord", readingRecord.get());
         model.addAttribute("statuses", ReadingStatus.values());
