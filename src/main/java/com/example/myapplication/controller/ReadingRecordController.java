@@ -33,16 +33,16 @@ public class ReadingRecordController {
     @GetMapping
     public String index(@RequestParam(defaultValue = "UNREAD") String status, Model model) {
         ReadingStatus readingStatus = ReadingStatus.valueOf(status);
-        
+
         model.addAttribute("readingRecords", readingRecordService.getReadingRecordsByStatus(readingStatus));
         model.addAttribute("currentStatus", readingStatus);
-        
+
         // 各ステータスの件数を追加
         model.addAttribute("unreadCount", readingRecordService.getCountByStatus(ReadingStatus.UNREAD));
         model.addAttribute("readingCount", readingRecordService.getCountByStatus(ReadingStatus.READING));
         model.addAttribute("completedCount", readingRecordService.getCountByStatus(ReadingStatus.COMPLETED));
         model.addAttribute("pausedCount", readingRecordService.getCountByStatus(ReadingStatus.PAUSED));
-        
+
         return "reading-records/index";
     }
 
@@ -52,11 +52,11 @@ public class ReadingRecordController {
     @GetMapping("/{id}")
     public String detail(@PathVariable Long id, Model model) {
         Optional<ReadingRecord> readingRecord = readingRecordService.getReadingRecordById(id);
-        
+
         if (readingRecord.isEmpty()) {
             return "redirect:/reading-records";
         }
-        
+
         model.addAttribute("readingRecord", readingRecord.get());
         model.addAttribute("statuses", ReadingStatus.values());
         return "reading-records/detail";
@@ -78,11 +78,11 @@ public class ReadingRecordController {
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable Long id, Model model) {
         Optional<ReadingRecord> readingRecord = readingRecordService.getReadingRecordById(id);
-        
+
         if (readingRecord.isEmpty()) {
             return "redirect:/reading-records";
         }
-        
+
         model.addAttribute("readingRecord", readingRecord.get());
         model.addAttribute("statuses", ReadingStatus.values());
         return "reading-records/form";
