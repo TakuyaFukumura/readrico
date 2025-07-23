@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
@@ -48,6 +49,7 @@ public class ReadingRecord {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Getter
     public enum ReadingStatus {
         UNREAD("未読"),
         READING("読書中"),
@@ -58,10 +60,6 @@ public class ReadingRecord {
 
         ReadingStatus(String displayName) {
             this.displayName = displayName;
-        }
-
-        public String getDisplayName() {
-            return displayName;
         }
     }
 }
