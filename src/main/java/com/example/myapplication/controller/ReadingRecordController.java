@@ -37,7 +37,7 @@ public class ReadingRecordController {
         ReadingStatus readingStatus = ReadingStatus.valueOf(status);
 
         model.addAttribute("readingRecords", readingRecordService.getReadingRecordsByStatus(readingStatus));
-        model.addAttribute("currentStatus", readingStatus);
+        model.addAttribute("currentStatusName", readingStatus.name());
 
         // 各ステータスの件数を追加
         model.addAttribute("unreadCount", readingRecordService.getCountByStatus(ReadingStatus.UNREAD));

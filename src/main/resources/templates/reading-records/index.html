@@ -144,25 +144,25 @@
         <!-- タブ -->
         <div class="tabs">
             <a href="/reading-records?status=UNREAD" 
-               th:classappend="${currentStatus.name() == 'UNREAD'} ? 'active' : ''" 
+               th:classappend="${currentStatusName == 'UNREAD'} ? 'active' : ''"
                class="tab">
                 未読
                 <span class="tab-count" th:text="${unreadCount}">0</span>
             </a>
             <a href="/reading-records?status=READING" 
-               th:classappend="${currentStatus.name() == 'READING'} ? 'active' : ''" 
+               th:classappend="${currentStatusName == 'READING'} ? 'active' : ''"
                class="tab">
                 読書中
                 <span class="tab-count" th:text="${readingCount}">0</span>
             </a>
             <a href="/reading-records?status=COMPLETED" 
-               th:classappend="${currentStatus.name() == 'COMPLETED'} ? 'active' : ''" 
+               th:classappend="${currentStatusName == 'COMPLETED'} ? 'active' : ''"
                class="tab">
                 読了
                 <span class="tab-count" th:text="${completedCount}">0</span>
             </a>
             <a href="/reading-records?status=PAUSED" 
-               th:classappend="${currentStatus.name() == 'PAUSED'} ? 'active' : ''" 
+               th:classappend="${currentStatusName == 'PAUSED'} ? 'active' : ''"
                class="tab">
                 中止
                 <span class="tab-count" th:text="${pausedCount}">0</span>
