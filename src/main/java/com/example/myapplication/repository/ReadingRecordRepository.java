@@ -9,8 +9,8 @@ import java.util.List;
 
 @Repository
 public interface ReadingRecordRepository extends JpaRepository<ReadingRecord, Long> {
-    
+
     List<ReadingRecord> findByReadingStatusOrderByUpdatedAtDesc(ReadingStatus readingStatus);
-    
+
     long countByReadingStatus(ReadingStatus readingStatus);
 }
