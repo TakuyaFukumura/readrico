@@ -49,12 +49,12 @@ public class ReadingRecordService {
     public ReadingRecord saveReadingRecord(ReadingRecord readingRecord) {
         log.info("saveReadingRecord was called");
         LocalDateTime now = LocalDateTime.now();
-        
+
         if (readingRecord.getId() == null) {
             readingRecord.setCreatedAt(now);
         }
         readingRecord.setUpdatedAt(now);
-        
+
         return readingRecordRepository.save(readingRecord);
     }
 
@@ -64,13 +64,5 @@ public class ReadingRecordService {
     public void deleteReadingRecord(Long id) {
         log.info("deleteReadingRecord was called with id: {}", id);
         readingRecordRepository.deleteById(id);
-    }
-
-    /**
-     * 全ての読書記録を取得
-     */
-    public List<ReadingRecord> getAllReadingRecords() {
-        log.info("getAllReadingRecords was called");
-        return readingRecordRepository.findAll();
     }
 }
