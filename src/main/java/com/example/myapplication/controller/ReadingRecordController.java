@@ -20,6 +20,10 @@ import java.util.Optional;
 @RequestMapping("/reading-records")
 public class ReadingRecordController {
 
+    private static final String STATUSES = "statuses";
+    private static final String READING_RECORD = "readingRecord";
+    private static final String REDIRECT = "redirect:/reading-records";
+
     private final ReadingRecordService readingRecordService;
 
     @Autowired
@@ -54,7 +58,7 @@ public class ReadingRecordController {
         Optional<ReadingRecord> readingRecord = readingRecordService.getReadingRecordById(id);
 
         if (readingRecord.isEmpty()) {
-            return "redirect:/reading-records";
+            return REDIRECT;
         }
 
         // 進捗率の計算
@@ -64,8 +68,8 @@ public class ReadingRecordController {
         );
         model.addAttribute("progressPercent", progressPercent);
 
-        model.addAttribute("readingRecord", readingRecord.get());
-        model.addAttribute("statuses", ReadingStatus.values());
+        model.addAttribute(READING_RECORD, readingRecord.get());
+        model.addAttribute(STATUSES, ReadingStatus.values());
         return "reading-records/detail";
     }
 
@@ -74,8 +78,8 @@ public class ReadingRecordController {
      */
     @GetMapping("/new")
     public String newRecord(Model model) {
-        model.addAttribute("readingRecord", new ReadingRecord());
-        model.addAttribute("statuses", ReadingStatus.values());
+        model.addAttribute(READING_RECORD, new ReadingRecord());
+        model.addAttribute(STATUSES, ReadingStatus.values());
         return "reading-records/form";
     }
 
@@ -87,11 +91,11 @@ public class ReadingRecordController {
         Optional<ReadingRecord> readingRecord = readingRecordService.getReadingRecordById(id);
 
         if (readingRecord.isEmpty()) {
-            return "redirect:/reading-records";
+            return REDIRECT;
         }
 
-        model.addAttribute("readingRecord", readingRecord.get());
-        model.addAttribute("statuses", ReadingStatus.values());
+        model.addAttribute(READING_RECORD, readingRecord.get());
+        model.addAttribute(STATUSES, ReadingStatus.values());
         return "reading-records/form";
     }
 
@@ -103,10 +107,10 @@ public class ReadingRecordController {
         try {
             ReadingRecord saved = readingRecordService.saveReadingRecord(readingRecord);
             redirectAttributes.addFlashAttribute("message", "読書記録を保存しました。");
-            return "redirect:/reading-records/" + saved.getId();
+            return REDIRECT + "/" + saved.getId();
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "保存中にエラーが発生しました。");
-            return "redirect:/reading-records/new";
+            return REDIRECT + "/new";
         }
     }
 
@@ -121,6 +125,6 @@ public class ReadingRecordController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "削除中にエラーが発生しました。");
         }
-        return "redirect:/reading-records";
+        return REDIRECT;
     }
 }
