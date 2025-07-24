@@ -35,7 +35,7 @@ public class ReadingRecordController {
      * 読書記録一覧画面
      */
     @GetMapping
-    public String index(@RequestParam(defaultValue = "UNREAD") String status, Model model) {
+    public String list(@RequestParam(defaultValue = "UNREAD") String status, Model model) {
         ReadingStatus readingStatus;
         try {
             readingStatus = ReadingStatus.valueOf(status);
@@ -52,7 +52,7 @@ public class ReadingRecordController {
         model.addAttribute("completedCount", readingRecordService.getCountByStatus(ReadingStatus.COMPLETED));
         model.addAttribute("pausedCount", readingRecordService.getCountByStatus(ReadingStatus.PAUSED));
 
-        return "reading-records/index";
+        return "reading-records/list";
     }
 
     /**
