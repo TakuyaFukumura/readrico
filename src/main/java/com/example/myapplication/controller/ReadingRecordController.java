@@ -60,13 +60,10 @@ public class ReadingRecordController {
         }
 
         // 進捗率の計算
-        int progressPercent = 0;
-        if (readingRecord.get().getTotalPages() > 0) {
-            BigDecimal currentPage = BigDecimal.valueOf(readingRecord.get().getCurrentPage());
-            BigDecimal totalPages = BigDecimal.valueOf(readingRecord.get().getTotalPages());
-            progressPercent = currentPage.multiply(BigDecimal.valueOf(100))
-                    .divide(totalPages, RoundingMode.HALF_UP).intValue();
-        }
+        int progressPercent = readingRecordService.getProgressPercent(
+                readingRecord.get().getTotalPages(),
+                readingRecord.get().getCurrentPage()
+        );
         model.addAttribute("progressPercent", progressPercent);
 
         model.addAttribute("readingRecord", readingRecord.get());

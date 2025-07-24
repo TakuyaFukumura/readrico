@@ -6,6 +6,8 @@ import com.example.myapplication.repository.ReadingRecordRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -64,5 +66,26 @@ public class ReadingRecordService {
     public void deleteReadingRecord(Long id) {
         log.info("deleteReadingRecord was called with id: {}", id);
         readingRecordRepository.deleteById(id);
+    }
+
+    /**
+     * 総数と現在値から進捗率（％）を計算して返します。
+     * <p>
+     * 引数が不正な場合は0を返します。
+     *
+     * @param total 総数
+     * @param current 現在値
+     * @return 進捗率（％）。計算できない場合は0
+     */
+    public int getProgressPercent(Integer total, Integer current) {
+        if (total == null || current == null || total <= 0 || current < 0) {
+            return 0;
+        }
+
+        // 現在値 × 100 ÷ 総数 = 進捗率（単位：%）
+        return BigDecimal.valueOf(current)
+                .multiply(BigDecimal.valueOf(100))
+                .divide(BigDecimal.valueOf(total), RoundingMode.HALF_UP)
+                .intValue();
     }
 }
