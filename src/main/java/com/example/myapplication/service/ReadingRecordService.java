@@ -70,6 +70,7 @@ public class ReadingRecordService {
 
     /**
      * 総数と現在値から進捗率（％）を計算して返します。
+     * 上限は100%です。
      * <p>
      * 以下のいずれかの場合は0を返します。
      * <ul>
@@ -87,9 +88,10 @@ public class ReadingRecordService {
         }
 
         // 現在値 × 100 ÷ 総数 = 進捗率（単位：%）
-        return BigDecimal.valueOf(current)
+        int progressPercent = BigDecimal.valueOf(current)
                 .multiply(BigDecimal.valueOf(100))
                 .divide(BigDecimal.valueOf(total), RoundingMode.HALF_UP)
                 .intValue();
+        return Math.min(progressPercent, 100);
     }
 }
