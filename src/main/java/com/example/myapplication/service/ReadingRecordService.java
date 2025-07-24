@@ -1,8 +1,8 @@
 package com.example.myapplication.service;
 
 import com.example.myapplication.entity.ReadingRecord;
-import com.example.myapplication.entity.ReadingRecord.ReadingStatus;
 import com.example.myapplication.repository.ReadingRecordRepository;
+import com.example.myapplication.status.ReadingStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

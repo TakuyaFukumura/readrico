@@ -1,7 +1,7 @@
 package com.example.myapplication.repository;
 
 import com.example.myapplication.entity.ReadingRecord;
-import com.example.myapplication.entity.ReadingRecord.ReadingStatus;
+import com.example.myapplication.status.ReadingStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

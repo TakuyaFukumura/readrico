@@ -1,5 +1,6 @@
 package com.example.myapplication.entity;
 
+import com.example.myapplication.status.ReadingStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,7 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.Getter;
 
 import java.time.LocalDateTime;
 
@@ -48,18 +48,4 @@ public class ReadingRecord {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    @Getter
-    public enum ReadingStatus {
-        UNREAD("未読"),
-        READING("読書中"),
-        COMPLETED("読了"),
-        PAUSED("中止");
-
-        private final String displayName;
-
-        ReadingStatus(String displayName) {
-            this.displayName = displayName;
-        }
-    }
 }
