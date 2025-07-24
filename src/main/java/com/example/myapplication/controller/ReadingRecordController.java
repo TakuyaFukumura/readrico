@@ -36,7 +36,12 @@ public class ReadingRecordController {
      */
     @GetMapping
     public String index(@RequestParam(defaultValue = "UNREAD") String status, Model model) {
-        ReadingStatus readingStatus = ReadingStatus.valueOf(status);
+        ReadingStatus readingStatus;
+        try {
+            readingStatus = ReadingStatus.valueOf(status);
+        } catch (IllegalArgumentException e) {
+            readingStatus = ReadingStatus.UNREAD;
+        }
 
         model.addAttribute("readingRecords", readingRecordService.getReadingRecordsByStatus(readingStatus));
         model.addAttribute("currentStatusName", readingStatus.name());
