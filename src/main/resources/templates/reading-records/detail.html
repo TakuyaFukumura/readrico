@@ -197,7 +197,6 @@
         
         <div class="actions">
             <a th:href="@{/reading-records/{id}/edit(id=${readingRecord.id})}" class="btn btn-primary">編集</a>
-            <a href="/reading-records" class="btn btn-secondary">一覧に戻る</a>
             <form th:action="@{/reading-records/{id}/delete(id=${readingRecord.id})}" method="post" 
                   style="display: inline;" 
                   onsubmit="return confirm('この読書記録を削除してもよろしいですか？')">
