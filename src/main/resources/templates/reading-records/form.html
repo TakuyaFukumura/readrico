@@ -118,7 +118,8 @@
 </head>
 <body>
     <div class="container">
-        <a href="/reading-records" class="back-link">← 読書記録一覧に戻る</a>
+        <a th:href="${readingRecord.id != null} ? @{/reading-records/{id}(id=${readingRecord.id})} : @{/reading-records}"
+           class="back-link">← 前の画面へ戻る</a>
         
         <h1 th:text="${readingRecord.id != null ? '読書記録編集' : '読書記録登録'}">読書記録登録</h1>
         
@@ -177,7 +178,6 @@
                 <button type="submit" class="btn btn-primary">
                     <span th:text="${readingRecord.id != null ? '更新' : '登録'}">登録</span>
                 </button>
-                <a href="/reading-records" class="btn btn-secondary">キャンセル</a>
             </div>
         </form>
     </div>
