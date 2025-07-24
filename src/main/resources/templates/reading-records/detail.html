@@ -198,7 +198,7 @@
         <div class="actions">
             <a th:href="@{/reading-records/{id}/edit(id=${readingRecord.id})}" class="btn btn-primary">編集</a>
             <form th:action="@{/reading-records/{id}/delete(id=${readingRecord.id})}" method="post" 
-                  style="display: inline;" 
+                  style="display: inline; margin-left: auto;"
                   onsubmit="return confirm('この読書記録を削除してもよろしいですか？')">
                 <button type="submit" class="btn btn-danger">削除</button>
             </form>
