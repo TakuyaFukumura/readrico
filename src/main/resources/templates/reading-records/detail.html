@@ -3,181 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <title>読書記録詳細</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            border-bottom: 3px solid #007bff;
-            padding-bottom: 10px;
-        }
-        .back-link {
-            display: inline-block;
-            color: #007bff;
-            text-decoration: none;
-            margin-bottom: 20px;
-            font-size: 0.9em;
-        }
-        .back-link:hover {
-            text-decoration: underline;
-        }
-        .detail-section {
-            margin-bottom: 25px;
-        }
-        .detail-label {
-            font-weight: bold;
-            color: #555;
-            margin-bottom: 5px;
-        }
-        .detail-value {
-            background-color: #f8f9fa;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #e9ecef;
-            min-height: 20px;
-        }
-        .detail-value.long {
-            min-height: 80px;
-            white-space: pre-wrap;
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: bold;
-            color: white;
-        }
-        .status-UNREAD { background-color: #6c757d; }
-        .status-READING { background-color: #007bff; }
-        .status-COMPLETED { background-color: #28a745; }
-        .status-PAUSED { background-color: #ffc107; color: #212529; }
-        .actions {
-            margin-top: 30px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-block;
-        }
-        .btn-primary {
-            background-color: #007bff;
-            color: white;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-            color: white;
-        }
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-        }
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-        .btn-secondary {
-            background-color: #6c757d;
-            color: white;
-        }
-        .btn-secondary:hover {
-            background-color: #545b62;
-            color: white;
-        }
-        .progress-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .progress-bar {
-            flex: 1;
-            height: 20px;
-            background-color: #e9ecef;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background-color: #28a745;
-            transition: width 0.3s ease;
-        }
-        .progress-text {
-            font-weight: bold;
-            color: #555;
-        }
-        .alert {
-            padding: 12px 20px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-        }
-        .alert-success {
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-        }
-        .alert-error {
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/tailwind.css}">
 </head>
-<body>
-    <div class="container">
-        <a href="/reading-records" class="back-link">← 読書記録一覧に戻る</a>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto max-w-3xl bg-white p-8 rounded-lg shadow-lg">
+        <a href="/reading-records" class="inline-block text-blue-500 no-underline mb-5 text-sm hover:underline">← 読書記録一覧に戻る</a>
         
-        <h1>読書記録詳細</h1>
+        <h1 class="text-3xl text-gray-800 border-b-4 border-blue-500 pb-3 mb-6">読書記録詳細</h1>
         
         <!-- メッセージ表示 -->
-        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
-        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+        <div th:if="${message}" class="bg-green-100 border border-green-300 text-green-700 p-3 rounded mb-5" th:text="${message}"></div>
+        <div th:if="${error}" class="bg-red-100 border border-red-300 text-red-700 p-3 rounded mb-5" th:text="${error}"></div>
         
-        <div class="detail-section">
-            <div class="detail-label">タイトル</div>
-            <div class="detail-value" th:text="${readingRecord.title}">タイトル</div>
+        <div class="mb-6">
+            <div class="font-bold text-gray-700 mb-2">タイトル</div>
+            <div class="bg-gray-50 p-3 rounded border border-gray-200 min-h-5" th:text="${readingRecord.title}">タイトル</div>
         </div>
         
-        <div class="detail-section">
-            <div class="detail-label">著者</div>
-            <div class="detail-value" th:text="${readingRecord.author ?: '未設定'}">著者</div>
+        <div class="mb-6">
+            <div class="font-bold text-gray-700 mb-2">著者</div>
+            <div class="bg-gray-50 p-3 rounded border border-gray-200 min-h-5" th:text="${readingRecord.author ?: '未設定'}">著者</div>
         </div>
         
-        <div class="detail-section">
-            <div class="detail-label">読書状態</div>
-            <div class="detail-value">
+        <div class="mb-6">
+            <div class="font-bold text-gray-700 mb-2">読書状態</div>
+            <div class="bg-gray-50 p-3 rounded border border-gray-200 min-h-5">
                 <span class="status-badge" 
                       th:classappend="'status-' + ${readingRecord.readingStatus.name()}"
                       th:text="${readingRecord.readingStatus.displayName}">状態</span>
             </div>
         </div>
         
-        <div class="detail-section" th:if="${readingRecord.totalPages != null and readingRecord.totalPages > 0}">
-            <div class="detail-label">読書進捗</div>
-            <div class="detail-value">
-                <div class="progress-section">
+        <div class="mb-6" th:if="${readingRecord.totalPages != null and readingRecord.totalPages > 0}">
+            <div class="font-bold text-gray-700 mb-2">読書進捗</div>
+            <div class="bg-gray-50 p-3 rounded border border-gray-200 min-h-5">
+                <div class="flex items-center gap-4">
                     <div class="progress-bar">
                         <div class="progress-fill" 
                              th:style="'width: ' + ${progressPercent} + '%'"></div>
                     </div>
-                    <div class="progress-text" 
+                    <div class="font-bold text-gray-700" 
                          th:text="${readingRecord.currentPage} + ' / ' + ${readingRecord.totalPages} + ' ページ'">
                         進捗
                     </div>
@@ -185,22 +50,22 @@
             </div>
         </div>
         
-        <div class="detail-section">
-            <div class="detail-label">概要</div>
-            <div class="detail-value long" th:text="${readingRecord.summary ?: ''}">概要</div>
+        <div class="mb-6">
+            <div class="font-bold text-gray-700 mb-2">概要</div>
+            <div class="bg-gray-50 p-3 rounded border border-gray-200 min-h-20 whitespace-pre-wrap" th:text="${readingRecord.summary ?: ''}">概要</div>
         </div>
         
-        <div class="detail-section">
-            <div class="detail-label">感想</div>
-            <div class="detail-value long" th:text="${readingRecord.thoughts ?: ''}">感想</div>
+        <div class="mb-6">
+            <div class="font-bold text-gray-700 mb-2">感想</div>
+            <div class="bg-gray-50 p-3 rounded border border-gray-200 min-h-20 whitespace-pre-wrap" th:text="${readingRecord.thoughts ?: ''}">感想</div>
         </div>
         
-        <div class="actions">
-            <a th:href="@{/reading-records/{id}/edit(id=${readingRecord.id})}" class="btn btn-primary">編集</a>
+        <div class="mt-8 flex gap-3 flex-wrap">
+            <a th:href="@{/reading-records/{id}/edit(id=${readingRecord.id})}" class="bg-blue-500 text-white py-2 px-5 border-0 rounded-md no-underline cursor-pointer transition-all duration-300 ease-in-out inline-block hover:bg-blue-700">編集</a>
             <form th:action="@{/reading-records/{id}/delete(id=${readingRecord.id})}" method="post" 
-                  style="display: inline; margin-left: auto;"
+                  class="inline ml-auto"
                   onsubmit="return confirm('この読書記録を削除してもよろしいですか？')">
-                <button type="submit" class="btn btn-danger">削除</button>
+                <button type="submit" class="bg-red-500 text-white py-2 px-5 border-0 rounded-md cursor-pointer transition-all duration-300 ease-in-out hover:bg-red-600">削除</button>
             </form>
         </div>
     </div>
