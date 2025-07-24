@@ -110,7 +110,11 @@ public class ReadingRecordController {
             return REDIRECT + "/" + saved.getId();
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "保存中にエラーが発生しました。");
-            return REDIRECT + "/new";
+            if (readingRecord.getId() != null) {
+                return REDIRECT + "/" + readingRecord.getId() + "/edit";
+            } else {
+                return REDIRECT + "/new";
+            }
         }
     }
 
