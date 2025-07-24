@@ -1,6 +1,3 @@
-DELETE FROM message;
-INSERT INTO message (text) VALUES ('Hello World!');
-
 DELETE FROM reading_record;
 INSERT INTO reading_record (title, author, reading_status, current_page, total_pages, summary, thoughts) VALUES
 ('吾輩は猫である', '夏目漱石', 'READING', 150, 300, '明治時代の教師の家で飼われている猫の視点から描かれた風刺小説', '猫の視点が面白く、当時の社会を鋭く描写している'),

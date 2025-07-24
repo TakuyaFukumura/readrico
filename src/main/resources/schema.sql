@@ -1,9 +1,4 @@
-CREATE TABLE IF NOT EXISTS message (
-    id BIGINT AUTO_INCREMENT,
-    text VARCHAR(255),
-    PRIMARY KEY (id)
-);
-
+-- 読書記録
 CREATE TABLE IF NOT EXISTS reading_record (
     id BIGINT AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
