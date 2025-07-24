@@ -2,10 +2,67 @@
 <html lang="ja" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Index</title>
+    <title>Readrico - 読書記録アプリ</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        .welcome-message {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+        .action-button {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+            margin: 10px;
+        }
+        .action-button:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+        .description {
+            color: #555;
+            margin-top: 40px;
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
-    <h1>Index</h1>
-    <p th:text="${message}"></p>
+    <div class="container">
+        <h1>Readrico</h1>
+        <p class="welcome-message" th:text="${message}">Welcome message</p>
+        
+        <a href="/reading-records" class="action-button">📚 読書記録を見る</a>
+        
+        <p class="description">
+            あなたの読書ライフを記録しよう！<br>
+            本のタイトル、著者、読書進捗、感想などを管理できます。
+        </p>
+    </div>
 </body>
 </html>
