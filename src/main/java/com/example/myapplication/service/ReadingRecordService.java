@@ -71,9 +71,13 @@ public class ReadingRecordService {
     /**
      * 総数と現在値から進捗率（％）を計算して返します。
      * <p>
-     * 引数が不正な場合は0を返します。
+     * 以下のいずれかの場合は0を返します。
+     * <ul>
+     *   <li>総数がnullか0以下</li>
+     *   <li>現在値がnullか0未満</li>
+     * </ul>
      *
-     * @param total 総数
+     * @param total   総数
      * @param current 現在値
      * @return 進捗率（％）。計算できない場合は0
      */
