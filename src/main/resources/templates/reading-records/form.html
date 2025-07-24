@@ -118,7 +118,7 @@
 </head>
 <body>
     <div class="container">
-        <a th:href="${readingRecord.id != null} ? '/reading-records/' + ${readingRecord.id} : '/reading-records'"
+        <a th:href="${readingRecord.id != null} ? @{/reading-records/{id}(id=${readingRecord.id})} : @{/reading-records}"
            class="back-link">← 前の画面へ戻る</a>
         
         <h1 th:text="${readingRecord.id != null ? '読書記録編集' : '読書記録登録'}">読書記録登録</h1>
