@@ -86,12 +86,14 @@ public class ReadingRecordService {
         if (total == null || current == null || total <= 0 || current < 0) {
             return 0;
         }
+        if (current >= total) {
+            return 100;
+        }
 
         // 現在値 × 100 ÷ 総数 = 進捗率（単位：%）
-        int progressPercent = BigDecimal.valueOf(current)
+        return BigDecimal.valueOf(current)
                 .multiply(BigDecimal.valueOf(100))
                 .divide(BigDecimal.valueOf(total), RoundingMode.HALF_UP)
                 .intValue();
-        return Math.min(progressPercent, 100);
     }
 }
