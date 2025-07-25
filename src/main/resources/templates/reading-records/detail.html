@@ -2,207 +2,90 @@
 <html lang="ja" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>読書記録詳細</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            border-bottom: 3px solid #007bff;
-            padding-bottom: 10px;
-        }
-        .back-link {
-            display: inline-block;
-            color: #007bff;
-            text-decoration: none;
-            margin-bottom: 20px;
-            font-size: 0.9em;
-        }
-        .back-link:hover {
-            text-decoration: underline;
-        }
-        .detail-section {
-            margin-bottom: 25px;
-        }
-        .detail-label {
-            font-weight: bold;
-            color: #555;
-            margin-bottom: 5px;
-        }
-        .detail-value {
-            background-color: #f8f9fa;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #e9ecef;
-            min-height: 20px;
-        }
-        .detail-value.long {
-            min-height: 80px;
-            white-space: pre-wrap;
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: bold;
-            color: white;
-        }
-        .status-UNREAD { background-color: #6c757d; }
-        .status-READING { background-color: #007bff; }
-        .status-COMPLETED { background-color: #28a745; }
-        .status-PAUSED { background-color: #ffc107; color: #212529; }
-        .actions {
-            margin-top: 30px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-block;
-        }
-        .btn-primary {
-            background-color: #007bff;
-            color: white;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-            color: white;
-        }
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-        }
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-        .btn-secondary {
-            background-color: #6c757d;
-            color: white;
-        }
-        .btn-secondary:hover {
-            background-color: #545b62;
-            color: white;
-        }
-        .progress-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .progress-bar {
-            flex: 1;
-            height: 20px;
-            background-color: #e9ecef;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background-color: #28a745;
-            transition: width 0.3s ease;
-        }
-        .progress-text {
-            font-weight: bold;
-            color: #555;
-        }
-        .alert {
-            padding: 12px 20px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-        }
-        .alert-success {
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-        }
-        .alert-error {
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
-<body>
-    <div class="container">
-        <a href="/reading-records" class="back-link">← 読書記録一覧に戻る</a>
-        
-        <h1>読書記録詳細</h1>
-        
-        <!-- メッセージ表示 -->
-        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
-        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
-        
-        <div class="detail-section">
-            <div class="detail-label">タイトル</div>
-            <div class="detail-value" th:text="${readingRecord.title}">タイトル</div>
-        </div>
-        
-        <div class="detail-section">
-            <div class="detail-label">著者</div>
-            <div class="detail-value" th:text="${readingRecord.author ?: '未設定'}">著者</div>
-        </div>
-        
-        <div class="detail-section">
-            <div class="detail-label">読書状態</div>
-            <div class="detail-value">
-                <span class="status-badge" 
-                      th:classappend="'status-' + ${readingRecord.readingStatus.name()}"
-                      th:text="${readingRecord.readingStatus.displayName}">状態</span>
-            </div>
-        </div>
-        
-        <div class="detail-section" th:if="${readingRecord.totalPages != null and readingRecord.totalPages > 0}">
-            <div class="detail-label">読書進捗</div>
-            <div class="detail-value">
-                <div class="progress-section">
-                    <div class="progress-bar">
-                        <div class="progress-fill" 
-                             th:style="'width: ' + ${progressPercent} + '%'"></div>
-                    </div>
-                    <div class="progress-text" 
-                         th:text="${readingRecord.currentPage} + ' / ' + ${readingRecord.totalPages} + ' ページ'">
-                        進捗
+<body class="bg-light">
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <a href="/reading-records" class="text-decoration-none text-primary mb-3 d-inline-block">
+                            ← 読書記録一覧に戻る
+                        </a>
+                        
+                        <h1 class="text-primary border-bottom border-primary border-3 pb-3 mb-4">読書記録詳細</h1>
+                        
+                        <!-- メッセージ表示 -->
+                        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+                        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary">タイトル</label>
+                            <div class="p-3 bg-light rounded border" th:text="${readingRecord.title}">タイトル</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary">著者</label>
+                            <div class="p-3 bg-light rounded border" th:text="${readingRecord.author ?: '未設定'}">著者</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary">読書状態</label>
+                            <div class="p-3 bg-light rounded border">
+                                <span th:switch="${readingRecord.readingStatus.name()}">
+                                    <span th:case="'UNREAD'" class="badge bg-secondary fs-6" th:text="${readingRecord.readingStatus.displayName}">未読</span>
+                                    <span th:case="'READING'" class="badge bg-primary fs-6" th:text="${readingRecord.readingStatus.displayName}">読書中</span>
+                                    <span th:case="'COMPLETED'" class="badge bg-success fs-6" th:text="${readingRecord.readingStatus.displayName}">読了</span>
+                                    <span th:case="'PAUSED'" class="badge bg-warning text-dark fs-6" th:text="${readingRecord.readingStatus.displayName}">中止</span>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4" th:if="${readingRecord.totalPages != null and readingRecord.totalPages > 0}">
+                            <label class="form-label fw-bold text-secondary">読書進捗</label>
+                            <div class="p-3 bg-light rounded border">
+                                <div class="d-flex align-items-center">
+                                    <div class="progress flex-grow-1 me-3" style="height: 25px;">
+                                        <div class="progress-bar bg-success" role="progressbar" 
+                                             th:style="'width: ' + ${progressPercent} + '%'"
+                                             th:attr="aria-valuenow=${progressPercent}">
+                                        </div>
+                                    </div>
+                                    <span class="fw-bold text-secondary" 
+                                          th:text="${readingRecord.currentPage} + ' / ' + ${readingRecord.totalPages} + ' ページ'">
+                                        進捗
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary">概要</label>
+                            <div class="p-3 bg-light rounded border" style="min-height: 100px; white-space: pre-wrap;" th:text="${readingRecord.summary ?: ''}">概要</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary">感想</label>
+                            <div class="p-3 bg-light rounded border" style="min-height: 100px; white-space: pre-wrap;" th:text="${readingRecord.thoughts ?: ''}">感想</div>
+                        </div>
+                        
+                        <div class="d-flex gap-2 justify-content-between flex-wrap">
+                            <a th:href="@{/reading-records/{id}/edit(id=${readingRecord.id})}" class="btn btn-primary">編集</a>
+                            <form th:action="@{/reading-records/{id}/delete(id=${readingRecord.id})}" method="post" 
+                                  class="d-inline"
+                                  onsubmit="return confirm('この読書記録を削除してもよろしいですか？')">
+                                <button type="submit" class="btn btn-outline-danger">削除</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <div class="detail-section">
-            <div class="detail-label">概要</div>
-            <div class="detail-value long" th:text="${readingRecord.summary ?: ''}">概要</div>
-        </div>
-        
-        <div class="detail-section">
-            <div class="detail-label">感想</div>
-            <div class="detail-value long" th:text="${readingRecord.thoughts ?: ''}">感想</div>
-        </div>
-        
-        <div class="actions">
-            <a th:href="@{/reading-records/{id}/edit(id=${readingRecord.id})}" class="btn btn-primary">編集</a>
-            <form th:action="@{/reading-records/{id}/delete(id=${readingRecord.id})}" method="post" 
-                  style="display: inline; margin-left: auto;"
-                  onsubmit="return confirm('この読書記録を削除してもよろしいですか？')">
-                <button type="submit" class="btn btn-danger">削除</button>
-            </form>
-        </div>
     </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
