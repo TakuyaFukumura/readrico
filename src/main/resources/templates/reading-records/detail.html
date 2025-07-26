@@ -81,7 +81,9 @@
                         </div>
                         
                         <div class="d-flex gap-2 justify-content-between flex-wrap">
-                            <a th:href="@{/reading-records/{id}/edit(id=${readingRecord.id})}" class="btn btn-primary">編集</a>
+                            <a th:href="@{/reading-records/{id}/edit(id=${readingRecord.id})}" class="btn btn-primary">
+                                編集
+                            </a>
                             <form th:action="@{/reading-records/{id}/delete(id=${readingRecord.id})}" method="post" 
                                   class="d-inline"
                                   onsubmit="return confirm('この読書記録を削除してもよろしいですか？')">
