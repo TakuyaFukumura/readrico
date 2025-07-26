@@ -55,10 +55,11 @@
                     </div>
 
                     <div class="mb-4" th:if="${readingRecord.totalPages != null and readingRecord.totalPages > 0}">
-                        <label class="form-label fw-bold text-secondary">読書進捗</label>
+                        <label for="progress" class="form-label fw-bold text-secondary">読書進捗</label>
                         <div class="p-3 rounded border">
                             <div class="d-flex align-items-center">
-                                <progress class="flex-grow-1 me-3" th:value="${progressPercent}" max="100"></progress>
+                                <progress id="progress" class="flex-grow-1 me-3"
+                                          th:value="${progressPercent}" max="100"></progress>
                                 <span class="fw-bold text-secondary"
                                       th:text="${readingRecord.currentPage} + ' / ' + ${readingRecord.totalPages} + ' ページ'">
                                 </span>
