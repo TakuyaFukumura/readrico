@@ -73,7 +73,7 @@
                         <div class="card h-100 shadow-sm border-0">
                             <div class="card-body">
                                 <a th:href="@{/reading-records/{id}(id=${record.id})}" class="text-decoration-none">
-                                    <h5 class="card-title text-dark" th:text="${record.title}">タイトル</h5>
+                                    <h5 class="card-title text-body" th:text="${record.title}">タイトル</h5>
                                     <p class="card-text text-muted small" th:text="${record.author}">著者</p>
                                     <div class="text-success small" 
                                          th:if="${record.totalPages != null and record.totalPages > 0}"
