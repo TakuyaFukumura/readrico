@@ -35,8 +35,11 @@ Readricoは、あなたの読書ライフをサポートする読書記録管理
 ### 必要環境
 - Java 17以上
 - Maven（または同梱のMaven Wrapper使用）
+- Docker（Docker環境を利用する場合）
 
 ### インストールと起動
+
+#### 通常の起動方法
 
 1. **リポジトリのクローン**
 ```bash
@@ -53,6 +56,50 @@ cd readrico
 ```
 http://localhost:8080
 ```
+
+#### Docker環境での起動方法
+
+Dockerを使用することで、Javaや Maven の環境構築なしで簡単にアプリケーションを起動できます。
+
+1. **リポジトリのクローン**
+```bash
+git clone https://github.com/TakuyaFukumura/readrico.git
+cd readrico
+```
+
+2. **JAR ファイルのビルド（初回のみ）**
+```bash
+./mvnw clean package -DskipTests
+```
+
+3. **Docker イメージのビルドと起動**
+```bash
+# Docker Compose を使用（推奨）
+docker compose up --build
+
+# または Docker 単体で実行
+docker build -t readrico .
+docker run -p 8080:8080 readrico
+```
+
+4. **ブラウザでアクセス**
+```
+http://localhost:8080
+```
+
+5. **停止する場合**
+```bash
+# Docker Compose の場合
+docker compose down
+
+# Docker 単体の場合
+Ctrl+C でプロセスを停止
+```
+
+**Docker 関連ファイル**：
+- `Dockerfile`: アプリケーションの Docker イメージ定義
+- `docker-compose.yml`: Docker Compose による簡単な起動設定
+- `.dockerignore`: Docker ビルド時に除外するファイル設定
 
 ### ビルドと実行
 
