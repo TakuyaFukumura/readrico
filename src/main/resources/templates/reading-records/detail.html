@@ -26,17 +26,17 @@
                         
                         <div class="mb-4">
                             <label class="form-label fw-bold text-secondary">タイトル</label>
-                            <div class="p-3 bg-light rounded border" th:text="${readingRecord.title}">タイトル</div>
+                            <div class="p-3 rounded border" th:text="${readingRecord.title}">タイトル</div>
                         </div>
                         
                         <div class="mb-4">
                             <label class="form-label fw-bold text-secondary">著者</label>
-                            <div class="p-3 bg-light rounded border" th:text="${readingRecord.author ?: '未設定'}">著者</div>
+                            <div class="p-3 rounded border" th:text="${readingRecord.author ?: '未設定'}">著者</div>
                         </div>
                         
                         <div class="mb-4">
                             <label class="form-label fw-bold text-secondary">読書状態</label>
-                            <div class="p-3 bg-light rounded border">
+                            <div class="p-3 rounded border">
                                 <span th:switch="${readingRecord.readingStatus.name()}">
                                     <span th:case="'UNREAD'" class="badge bg-secondary fs-6" th:text="${readingRecord.readingStatus.displayName}">未読</span>
                                     <span th:case="'READING'" class="badge bg-primary fs-6" th:text="${readingRecord.readingStatus.displayName}">読書中</span>
@@ -48,7 +48,7 @@
                         
                         <div class="mb-4" th:if="${readingRecord.totalPages != null and readingRecord.totalPages > 0}">
                             <label class="form-label fw-bold text-secondary">読書進捗</label>
-                            <div class="p-3 bg-light rounded border">
+                            <div class="p-3 rounded border">
                                 <div class="d-flex align-items-center">
                                     <div class="progress flex-grow-1 me-3" style="height: 25px;">
                                         <div class="progress-bar bg-success" role="progressbar" 
@@ -66,12 +66,12 @@
                         
                         <div class="mb-4">
                             <label class="form-label fw-bold text-secondary">概要</label>
-                            <div class="p-3 bg-light rounded border" style="min-height: 100px; white-space: pre-wrap;" th:text="${readingRecord.summary ?: ''}">概要</div>
+                            <div class="p-3 rounded border" style="min-height: 100px; white-space: pre-wrap;" th:text="${readingRecord.summary ?: ''}">概要</div>
                         </div>
                         
                         <div class="mb-4">
                             <label class="form-label fw-bold text-secondary">感想</label>
-                            <div class="p-3 bg-light rounded border" style="min-height: 100px; white-space: pre-wrap;" th:text="${readingRecord.thoughts ?: ''}">感想</div>
+                            <div class="p-3 rounded border" style="min-height: 100px; white-space: pre-wrap;" th:text="${readingRecord.thoughts ?: ''}">感想</div>
                         </div>
                         
                         <div class="d-flex gap-2 justify-content-between flex-wrap">
