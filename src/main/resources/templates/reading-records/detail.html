@@ -58,15 +58,10 @@
                         <label class="form-label fw-bold text-secondary">読書進捗</label>
                         <div class="p-3 rounded border">
                             <div class="d-flex align-items-center">
-                                <div class="progress flex-grow-1 me-3" style="height: 25px;">
-                                    <div class="progress-bar bg-success" role="progressbar"
-                                         th:style="'width: ' + ${progressPercent} + '%'"
-                                         th:attr="aria-valuenow=${progressPercent}">
-                                    </div>
-                                </div>
+                                <progress class="flex-grow-1 me-3" th:value="${progressPercent}" max="100"></progress>
                                 <span class="fw-bold text-secondary"
                                       th:text="${readingRecord.currentPage} + ' / ' + ${readingRecord.totalPages} + ' ページ'">
-                                    </span>
+                                </span>
                             </div>
                         </div>
                     </div>
