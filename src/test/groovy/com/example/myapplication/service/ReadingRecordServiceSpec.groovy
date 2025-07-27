@@ -6,6 +6,9 @@ import com.example.myapplication.status.ReadingStatus
 import spock.lang.Specification
 import spock.lang.Subject
 
+import java.nio.charset.StandardCharsets
+import java.time.LocalDateTime
+
 /**
  * ReadingRecordServiceのテストクラス
  * Spockフレームワークを使用してサービス層のビジネスロジックをテストする
@@ -179,8 +182,8 @@ class ReadingRecordServiceSpec extends Specification {
                         totalPages: 100,
                         summary: "概要1",
                         thoughts: "感想1",
-                        createdAt: java.time.LocalDateTime.of(2024, 11, 27, 10, 0, 0),
-                        updatedAt: java.time.LocalDateTime.of(2024, 11, 27, 11, 0, 0)
+                        createdAt: LocalDateTime.of(2024, 11, 27, 10, 0, 0),
+                        updatedAt: LocalDateTime.of(2024, 11, 27, 11, 0, 0)
                 )
         ]
 
@@ -189,9 +192,9 @@ class ReadingRecordServiceSpec extends Specification {
 
         then: "CSVデータが正常に生成される"
         1 * mockRepository.findAll() >> records
-        
+
         // CSVデータを文字列に変換して内容を検証
-        String csvContent = new String(csvData, java.nio.charset.StandardCharsets.UTF_8)
+        String csvContent = new String(csvData, StandardCharsets.UTF_8)
         csvContent.contains("ID,タイトル,著者,読書状態,現在ページ,総ページ数,概要,感想,作成日時,更新日時")
         csvContent.contains("1,テスト本1,テスト著者1,読書中,50,100,概要1,感想1,2024-11-27 10:00:00,2024-11-27 11:00:00")
     }
@@ -205,8 +208,8 @@ class ReadingRecordServiceSpec extends Specification {
 
         then: "ヘッダーのみのCSVが生成される"
         1 * mockRepository.findAll() >> records
-        
-        String csvContent = new String(csvData, java.nio.charset.StandardCharsets.UTF_8)
+
+        String csvContent = new String(csvData, StandardCharsets.UTF_8)
         csvContent.contains("ID,タイトル,著者,読書状態,現在ページ,総ページ数,概要,感想,作成日時,更新日時")
         !csvContent.contains("1,") // データ行が含まれていない
     }
