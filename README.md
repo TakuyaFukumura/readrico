@@ -42,59 +42,63 @@ Readricoは、あなたの読書ライフをサポートする読書記録管理
 #### 通常の起動方法
 
 1. **リポジトリのクローン**
-```bash
-git clone https://github.com/TakuyaFukumura/readrico.git
-cd readrico
-```
+   ```bash
+   git clone https://github.com/TakuyaFukumura/readrico.git
+   ```
+   ```bash
+   cd readrico
+   ```
 
 2. **アプリケーションの起動**
-```bash
-./mvnw spring-boot:run
-```
+   ```bash
+   ./mvnw spring-boot:run
+   ```
 
 3. **ブラウザでアクセス**
-```
-http://localhost:8080
-```
+   - http://localhost:8080
 
 #### Docker環境での起動方法
 
 Dockerを使用することで、Javaや Maven の環境構築なしで簡単にアプリケーションを起動できます。
 
 1. **リポジトリのクローン**
-```bash
-git clone https://github.com/TakuyaFukumura/readrico.git
-cd readrico
-```
+   ```bash
+   git clone https://github.com/TakuyaFukumura/readrico.git
+   ```
+   ```bash
+   cd readrico
+   ```
 
 2. **JAR ファイルのビルド（初回のみ）**
-```bash
-./mvnw clean package -DskipTests
-```
+   ```bash
+   ./mvnw clean package
+   ```
 
 3. **Docker イメージのビルドと起動**
-```bash
-# Docker Compose を使用（推奨）
-docker compose up --build
-
-# または Docker 単体で実行
-docker build -t readrico .
-docker run -p 8080:8080 readrico
-```
+   - Docker Compose を使用（推奨）
+     ```bash
+     docker compose up --build
+     ```
+   - または Docker 単体で実行
+     ```bash
+     docker build -t readrico .
+     ```
+     ```bash
+     docker run -p 8080:8080 readrico
+     ```
 
 4. **ブラウザでアクセス**
-```
-http://localhost:8080
-```
+   - http://localhost:8080
 
 5. **停止する場合**
-```bash
-# Docker Compose の場合
-docker compose down
-
-# Docker 単体の場合
-Ctrl+C でプロセスを停止
-```
+   - Docker Compose の場合
+     ```bash
+     docker compose down
+     ```
+   - Docker 単体の場合
+     ```bash
+     Ctrl+C でプロセスを停止
+     ```
 
 **Docker 関連ファイル**：
 - `Dockerfile`: アプリケーションの Docker イメージ定義
@@ -103,16 +107,18 @@ Ctrl+C でプロセスを停止
 
 ### ビルドと実行
 
-```bash
-# プロジェクトのクリーンとコンパイル
-./mvnw clean compile
-
-# パッケージの作成
-./mvnw clean package
-
-# JARファイルの実行
-java -jar target/readrico.jar
-```
+- プロジェクトのクリーンとコンパイル
+   ```bash
+   ./mvnw clean compile
+   ```
+- パッケージの作成
+   ```bash
+   ./mvnw clean package
+   ```
+- JARファイルの実行
+   ```bash
+   java -jar target/readrico.jar
+   ```
 
 ## 使用方法
 
@@ -202,19 +208,3 @@ src/
 │               ├── detail.html           # 詳細画面
 │               └── form.html             # 登録・編集画面
 ```
-
-### ビルド設定
-
-- **GroupId**: com.example
-- **ArtifactId**: readrico
-- **Version**: 0.4.0
-- **Packaging**: jar
-- **Final Name**: readrico
-
-## ライセンス
-
-このプロジェクトはMITライセンスの下で公開されています。
-
-## 貢献
-
-プルリクエストやイシューの報告を歓迎します。貢献する前に、既存のコーディングスタイルを確認してください。
