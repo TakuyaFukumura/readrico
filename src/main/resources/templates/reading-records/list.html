@@ -70,7 +70,7 @@
                     </div>
                     
                     <div th:each="record : ${readingRecords}" class="col-md-6 col-lg-4 mb-3">
-                        <div class="card h-100 shadow-sm border-0">
+                        <div class="card h-100 shadow-sm border border-secondary">
                             <div class="card-body">
                                 <a th:href="@{/reading-records/{id}(id=${record.id})}" class="text-decoration-none">
                                     <h5 class="card-title text-body" th:text="${record.title}">タイトル</h5>
