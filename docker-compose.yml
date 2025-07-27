@@ -1,0 +1,9 @@
+services:
+  readrico:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      # Spring Boot profiles（必要に応じて）
+      - SPRING_PROFILES_ACTIVE=docker
+    restart: unless-stopped
