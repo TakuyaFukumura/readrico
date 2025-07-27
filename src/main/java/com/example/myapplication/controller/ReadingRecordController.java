@@ -3,6 +3,8 @@ package com.example.myapplication.controller;
 import com.example.myapplication.entity.ReadingRecord;
 import com.example.myapplication.service.ReadingRecordService;
 import com.example.myapplication.status.ReadingStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -23,6 +25,8 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/reading-records")
 public class ReadingRecordController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ReadingRecordController.class);
 
     private static final String STATUSES = "statuses";
     private static final String READING_RECORD = "readingRecord";
@@ -158,8 +162,14 @@ public class ReadingRecordController {
                     .contentType(MediaType.parseMediaType("text/csv; charset=UTF-8"))
                     .body(csvData);
         } catch (IOException e) {
-            // エラー時は空のレスポンスを返す
-            return ResponseEntity.internalServerError().build();
+            // エラーメッセージをログに出力
+            logger.error("CSVファイルの出力中にエラーが発生しました: {}", e.getMessage(), e);
+
+            // ユーザー向けのエラーメッセージを返す
+            String errorMessage = "CSVファイルの出力中にエラーが発生しました。";
+            return ResponseEntity.internalServerError()
+                    .contentType(MediaType.TEXT_PLAIN)
+                    .body(errorMessage.getBytes());
         }
     }
 }
