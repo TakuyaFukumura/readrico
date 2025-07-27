@@ -4,6 +4,9 @@ import com.example.myapplication.entity.ReadingRecord;
 import com.example.myapplication.service.ReadingRecordService;
 import com.example.myapplication.status.ReadingStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @Controller
@@ -135,5 +140,28 @@ public class ReadingRecordController {
             redirectAttributes.addFlashAttribute("error", "削除中にエラーが発生しました。");
         }
         return REDIRECT;
+    }
+
+    /**
+     * 読書記録CSV出力処理
+     */
+    @GetMapping("/export-csv")
+    public ResponseEntity<byte[]> exportCsv() {
+        try {
+            byte[] csvData = readingRecordService.exportToCsv();
+            String fileName = readingRecordService.generateCsvFileName();
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", fileName);
+            headers.add("Content-Type", "text/csv; charset=UTF-8");
+            
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(csvData);
+        } catch (IOException e) {
+            // エラー時は空のレスポンスを返す
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

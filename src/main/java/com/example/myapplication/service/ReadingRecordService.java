@@ -4,11 +4,18 @@ import com.example.myapplication.entity.ReadingRecord;
 import com.example.myapplication.repository.ReadingRecordRepository;
 import com.example.myapplication.status.ReadingStatus;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,5 +102,64 @@ public class ReadingRecordService {
                 .multiply(BigDecimal.valueOf(100))
                 .divide(BigDecimal.valueOf(total), RoundingMode.HALF_UP)
                 .intValue();
+    }
+
+    /**
+     * 全ての読書記録を取得
+     */
+    public List<ReadingRecord> getAllReadingRecords() {
+        log.info("getAllReadingRecords was called");
+        return readingRecordRepository.findAll();
+    }
+
+    /**
+     * 読書記録をCSV形式でエクスポート
+     * 
+     * @return CSVデータのバイト配列
+     * @throws IOException CSV生成時にエラーが発生した場合
+     */
+    public byte[] exportToCsv() throws IOException {
+        log.info("exportToCsv was called");
+        
+        List<ReadingRecord> records = getAllReadingRecords();
+        
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try (OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
+             CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT.withFirstRecordAsHeader())) {
+            
+            // ヘッダー行を設定
+            csvPrinter.printRecord("ID", "タイトル", "著者", "読書状態", "現在ページ", "総ページ数", 
+                                 "概要", "感想", "作成日時", "更新日時");
+            
+            // データ行を出力
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            for (ReadingRecord record : records) {
+                csvPrinter.printRecord(
+                    record.getId(),
+                    record.getTitle(),
+                    record.getAuthor(),
+                    record.getReadingStatus().getDisplayName(),
+                    record.getCurrentPage(),
+                    record.getTotalPages(),
+                    record.getSummary(),
+                    record.getThoughts(),
+                    record.getCreatedAt() != null ? record.getCreatedAt().format(formatter) : "",
+                    record.getUpdatedAt() != null ? record.getUpdatedAt().format(formatter) : ""
+                );
+            }
+        }
+        
+        return outputStream.toByteArray();
+    }
+
+    /**
+     * CSV出力用のファイル名を生成
+     * 
+     * @return ファイル名（例：reading-records_20241127_143022.csv）
+     */
+    public String generateCsvFileName() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+        String timestamp = LocalDateTime.now().format(formatter);
+        return "reading-records_" + timestamp + ".csv";
     }
 }

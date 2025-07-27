@@ -151,4 +151,73 @@ class ReadingRecordServiceSpec extends Specification {
         1          | 1           | 100
         2          | 1           | 50
     }
+
+    def "getAllReadingRecords - 全ての読書記録を取得する"() {
+        given: "すべての読書記録のリスト"
+        def allRecords = [
+                new ReadingRecord(id: 1L, title: "テスト本1", readingStatus: ReadingStatus.READING),
+                new ReadingRecord(id: 2L, title: "テスト本2", readingStatus: ReadingStatus.COMPLETED)
+        ]
+
+        when: "全ての読書記録を取得"
+        def result = readingRecordService.getAllReadingRecords()
+
+        then: "期待される結果が返される"
+        1 * mockRepository.findAll() >> allRecords
+        result == allRecords
+    }
+
+    def "exportToCsv - 読書記録をCSV形式で出力する"() {
+        given: "テスト用の読書記録"
+        def records = [
+                new ReadingRecord(
+                        id: 1L,
+                        title: "テスト本1",
+                        author: "テスト著者1",
+                        readingStatus: ReadingStatus.READING,
+                        currentPage: 50,
+                        totalPages: 100,
+                        summary: "概要1",
+                        thoughts: "感想1",
+                        createdAt: java.time.LocalDateTime.of(2024, 11, 27, 10, 0, 0),
+                        updatedAt: java.time.LocalDateTime.of(2024, 11, 27, 11, 0, 0)
+                )
+        ]
+
+        when: "CSV出力を実行"
+        byte[] csvData = readingRecordService.exportToCsv()
+
+        then: "CSVデータが正常に生成される"
+        1 * mockRepository.findAll() >> records
+        
+        // CSVデータを文字列に変換して内容を検証
+        String csvContent = new String(csvData, java.nio.charset.StandardCharsets.UTF_8)
+        csvContent.contains("ID,タイトル,著者,読書状態,現在ページ,総ページ数,概要,感想,作成日時,更新日時")
+        csvContent.contains("1,テスト本1,テスト著者1,読書中,50,100,概要1,感想1,2024-11-27 10:00:00,2024-11-27 11:00:00")
+    }
+
+    def "exportToCsv - 空の読書記録リストでもヘッダーのみのCSVが生成される"() {
+        given: "空の読書記録リスト"
+        def records = []
+
+        when: "CSV出力を実行"
+        byte[] csvData = readingRecordService.exportToCsv()
+
+        then: "ヘッダーのみのCSVが生成される"
+        1 * mockRepository.findAll() >> records
+        
+        String csvContent = new String(csvData, java.nio.charset.StandardCharsets.UTF_8)
+        csvContent.contains("ID,タイトル,著者,読書状態,現在ページ,総ページ数,概要,感想,作成日時,更新日時")
+        !csvContent.contains("1,") // データ行が含まれていない
+    }
+
+    def "generateCsvFileName - CSVファイル名が正しい形式で生成される"() {
+        when: "CSVファイル名を生成"
+        String fileName = readingRecordService.generateCsvFileName()
+
+        then: "正しい形式のファイル名が生成される"
+        fileName.startsWith("reading-records_")
+        fileName.endsWith(".csv")
+        fileName.matches("reading-records_\\d{8}_\\d{6}\\.csv")
+    }
 }

@@ -5,7 +5,7 @@
 
     <groupId>com.example</groupId>
     <artifactId>readrico</artifactId>
-    <version>0.6.0</version>
+    <version>0.7.0</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -41,6 +41,12 @@
             <artifactId>lombok</artifactId>
             <version>1.18.38</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <!-- Apache Commons CSV：CSV読み書きライブラリ -->
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.12.0</version>
         </dependency>
         
         <!-- Test dependencies -->
