@@ -24,11 +24,11 @@ class ReadingStatusSpec extends Specification {
         status.displayName == expectedDisplayName
 
         where: "全てのステータスとその表示名"
-        status                    | expectedDisplayName
-        ReadingStatus.UNREAD      | "未読"
-        ReadingStatus.READING     | "読書中"
-        ReadingStatus.COMPLETED   | "読了"
-        ReadingStatus.PAUSED      | "中止"
+        status                  | expectedDisplayName
+        ReadingStatus.UNREAD    | "未読"
+        ReadingStatus.READING   | "読書中"
+        ReadingStatus.COMPLETED | "読了"
+        ReadingStatus.PAUSED    | "中止"
     }
 
     def "ReadingStatus - valueOf で文字列から列挙値を取得できる"() {
@@ -56,11 +56,11 @@ class ReadingStatusSpec extends Specification {
         status.name() == expectedName
 
         where: "ステータスとその名前"
-        status                    | expectedName
-        ReadingStatus.UNREAD      | "UNREAD"
-        ReadingStatus.READING     | "READING"
-        ReadingStatus.COMPLETED   | "COMPLETED"
-        ReadingStatus.PAUSED      | "PAUSED"
+        status                  | expectedName
+        ReadingStatus.UNREAD    | "UNREAD"
+        ReadingStatus.READING   | "READING"
+        ReadingStatus.COMPLETED | "COMPLETED"
+        ReadingStatus.PAUSED    | "PAUSED"
     }
 
     def "ReadingStatus - ordinal() メソッドで順序を取得できる"() {
@@ -68,11 +68,11 @@ class ReadingStatusSpec extends Specification {
         status.ordinal() == expectedOrdinal
 
         where: "ステータスとその定義順序"
-        status                    | expectedOrdinal
-        ReadingStatus.UNREAD      | 0
-        ReadingStatus.READING     | 1
-        ReadingStatus.COMPLETED   | 2
-        ReadingStatus.PAUSED      | 3
+        status                  | expectedOrdinal
+        ReadingStatus.UNREAD    | 0
+        ReadingStatus.READING   | 1
+        ReadingStatus.COMPLETED | 2
+        ReadingStatus.PAUSED    | 3
     }
 
     def "ReadingStatus - equals と hashCode の動作を確認する"() {
@@ -93,10 +93,10 @@ class ReadingStatusSpec extends Specification {
         status.toString() == expectedToString
 
         where: "ステータスとtoStringの結果"
-        status                    | expectedToString
-        ReadingStatus.UNREAD      | "UNREAD"
-        ReadingStatus.READING     | "READING"
-        ReadingStatus.COMPLETED   | "COMPLETED"
-        ReadingStatus.PAUSED      | "PAUSED"
+        status                  | expectedToString
+        ReadingStatus.UNREAD    | "UNREAD"
+        ReadingStatus.READING   | "READING"
+        ReadingStatus.COMPLETED | "COMPLETED"
+        ReadingStatus.PAUSED    | "PAUSED"
     }
 }

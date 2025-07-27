@@ -6,8 +6,6 @@ import com.example.myapplication.status.ReadingStatus
 import spock.lang.Specification
 import spock.lang.Subject
 
-import java.time.LocalDateTime
-
 /**
  * ReadingRecordServiceのテストクラス
  * Spockフレームワークを使用してサービス層のビジネスロジックをテストする
