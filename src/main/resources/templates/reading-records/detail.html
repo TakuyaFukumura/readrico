@@ -27,31 +27,28 @@
 
                     <div class="mb-4">
                         <label for="title" class="form-label fw-bold text-secondary">タイトル</label>
-                        <input type="text" id="title" class="form-control" th:value="${readingRecord.title}" readonly>
+                        <div id="title" class="p-3 rounded border" th:text="${readingRecord.title}"></div>
                     </div>
 
                     <div class="mb-4">
                         <label for="author" class="form-label fw-bold text-secondary">著者</label>
-                        <input type="text" id="author" class="form-control"
-                               th:value="${readingRecord.author ?: '未設定'}" readonly>
+                        <div id="author" class="p-3 rounded border" th:text="${readingRecord.author ?: '未設定'}"></div>
                     </div>
 
                     <div class="mb-4">
                         <label for="readingStatus" class="form-label fw-bold text-secondary">読書状態</label>
-                        <select id="readingStatus" name="readingStatus" class="form-select" disabled>
-                            <option value="UNREAD"
-                                    th:selected="${readingRecord.readingStatus.name() == 'UNREAD'}">未読
-                            </option>
-                            <option value="READING"
-                                    th:selected="${readingRecord.readingStatus.name() == 'READING'}">読書中
-                            </option>
-                            <option value="COMPLETED"
-                                    th:selected="${readingRecord.readingStatus.name() == 'COMPLETED'}">読了
-                            </option>
-                            <option value="PAUSED"
-                                    th:selected="${readingRecord.readingStatus.name() == 'PAUSED'}">中止
-                            </option>
-                        </select>
+                        <div id="readingStatus" class="p-3 rounded border">
+                                <span th:switch="${readingRecord.readingStatus.name()}">
+                                    <span th:case="'UNREAD'" class="badge bg-secondary fs-6"
+                                          th:text="${readingRecord.readingStatus.displayName}">未読</span>
+                                    <span th:case="'READING'" class="badge bg-primary fs-6"
+                                          th:text="${readingRecord.readingStatus.displayName}">読書中</span>
+                                    <span th:case="'COMPLETED'" class="badge bg-success fs-6"
+                                          th:text="${readingRecord.readingStatus.displayName}">読了</span>
+                                    <span th:case="'PAUSED'" class="badge bg-warning text-dark fs-6"
+                                          th:text="${readingRecord.readingStatus.displayName}">中止</span>
+                                </span>
+                        </div>
                     </div>
 
                     <div class="mb-4" th:if="${readingRecord.totalPages != null and readingRecord.totalPages > 0}">
@@ -69,14 +66,14 @@
 
                     <div class="mb-4">
                         <label for="summary" class="form-label fw-bold text-secondary">概要</label>
-                        <input type="text" id="summary" class="form-control"
-                               th:value="${readingRecord.summary ?: ''}" readonly>
+                        <div id="summary" class="p-3 rounded border" style="min-height: 100px; white-space: pre-wrap;"
+                             th:text="${readingRecord.summary ?: ''}"></div>
                     </div>
 
                     <div class="mb-4">
                         <label for="thoughts" class="form-label fw-bold text-secondary">感想</label>
-                        <input type="text" id="thoughts" class="form-control"
-                               th:value="${readingRecord.thoughts ?: ''}" readonly>
+                        <div id="thoughts" class="p-3 rounded border" style="min-height: 100px; white-space: pre-wrap;"
+                             th:text="${readingRecord.thoughts ?: ''}"></div>
                     </div>
 
                     <div class="d-flex gap-2 justify-content-between flex-wrap">
