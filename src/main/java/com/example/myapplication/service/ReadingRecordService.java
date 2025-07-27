@@ -112,7 +112,7 @@ public class ReadingRecordService {
     }
 
     /**
-     * 読書記録をCSV形式でエクスポート
+     * 読書記録をCSV形式で出力
      *
      * @return CSVデータのバイト配列
      * @throws IOException CSV生成時にエラーが発生した場合
