@@ -10,18 +10,3 @@ services:
       # 開発時のホットリロード用（オプション）
       - ./target:/app/target:cached
     restart: unless-stopped
-
-# オプション: データベースをH2からPostgreSQLに変更する場合
-# database:
-#   image: postgres:15-alpine
-#   environment:
-#     POSTGRES_DB: readrico
-#     POSTGRES_USER: readrico
-#     POSTGRES_PASSWORD: readrico
-#   ports:
-#     - "5432:5432"
-#   volumes:
-#     - postgres_data:/var/lib/postgresql/data
-
-# volumes:
-#   postgres_data:
