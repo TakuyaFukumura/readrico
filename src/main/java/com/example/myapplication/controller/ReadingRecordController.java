@@ -151,7 +151,7 @@ public class ReadingRecordController {
             String fileName = readingRecordService.generateCsvFileName();
 
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentDispositionFormData("attachment", fileName);
+            headers.add("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
             headers.add("Content-Type", "text/csv; charset=UTF-8");
 
             return ResponseEntity.ok()

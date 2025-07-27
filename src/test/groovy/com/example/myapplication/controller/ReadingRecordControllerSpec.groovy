@@ -204,7 +204,7 @@ class ReadingRecordControllerSpec extends Specification {
         1 * mockService.exportToCsv() >> csvData
         1 * mockService.generateCsvFileName() >> fileName
         result.andExpect(status().isOk())
-                .andExpect(header().string("Content-Disposition", "form-data; name=\"attachment\"; filename=\"${fileName}\""))
+                .andExpect(header().string("Content-Disposition", "attachment; filename=\"${fileName}\""))
                 .andExpect(content().bytes(csvData))
     }
 
