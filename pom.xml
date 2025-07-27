@@ -5,7 +5,7 @@
 
     <groupId>com.example</groupId>
     <artifactId>readrico</artifactId>
-    <version>0.5.0</version>
+    <version>0.6.0</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -42,6 +42,34 @@
             <version>1.18.38</version>
             <scope>provided</scope>
         </dependency>
+        
+        <!-- Test dependencies -->
+        <dependency>
+            <!-- Spring Boot Test：テスト用のSpring Boot機能 -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- Groovy：動的プログラミング言語 -->
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- Spock Framework：Groovy用テストフレームワーク -->
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-core</artifactId>
+            <version>2.3-groovy-4.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- Spock Spring：SpockとSpring統合 -->
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-spring</artifactId>
+            <version>2.3-groovy-4.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -50,6 +78,31 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <!-- GMavenPlus：GroovyコードをMavenでコンパイルするためのプラグイン -->
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <version>4.0.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compileTests</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- Surefire：テスト実行プラグイン -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*Spec.java</include>
+                        <include>**/*Spec.groovy</include>
+                    </includes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
