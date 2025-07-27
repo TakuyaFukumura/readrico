@@ -1,0 +1,63 @@
+<!-- 共通ヘッダー -->
+<header th:fragment="header" class="navbar navbar-expand-lg bg-body-tertiary border-bottom">
+    <div class="container">
+        <a class="navbar-brand fw-bold text-primary" href="/reading-records">
+            📚 Readrico
+        </a>
+
+        <div class="d-flex align-items-center">
+            <!-- ダークモード切り替えボタン -->
+            <button id="darkModeToggle" class="btn btn-outline-secondary btn-sm" type="button"
+                    title="ダークモード切り替え" aria-label="ダークモード切り替え" aria-live="polite">
+                <span id="darkModeIcon">🌞</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- ダークモード切り替えスクリプト -->
+<script th:fragment="darkModeScript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const darkModeIcon = document.getElementById('darkModeIcon');
+        const htmlElement = document.documentElement;
+
+        // ローカルストレージから設定を取得、なければシステム設定を使用
+        function getInitialTheme() {
+            const savedTheme = localStorage.getItem('readrico-theme');
+            if (savedTheme) {
+                return savedTheme;
+            }
+            // システムのダークモード設定を確認
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        // テーマを適用
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                htmlElement.setAttribute('data-bs-theme', 'dark');
+                darkModeIcon.textContent = '🌙';
+            } else {
+                htmlElement.setAttribute('data-bs-theme', 'light');
+                darkModeIcon.textContent = '🌞';
+            }
+        }
+
+        // テーマを切り替え
+        function toggleTheme() {
+            const currentTheme = htmlElement.getAttribute('data-bs-theme') || 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            applyTheme(newTheme);
+            localStorage.setItem('readrico-theme', newTheme);
+        }
+
+        // 初期テーマを設定
+        const initialTheme = getInitialTheme();
+        applyTheme(initialTheme);
+        localStorage.setItem('readrico-theme', initialTheme);
+
+        // ボタンクリックイベント
+        darkModeToggle.addEventListener('click', toggleTheme);
+    });
+</script>
