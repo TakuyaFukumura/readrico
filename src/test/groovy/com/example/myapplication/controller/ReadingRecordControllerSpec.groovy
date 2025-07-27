@@ -191,4 +191,30 @@ class ReadingRecordControllerSpec extends Specification {
                 ReadingStatus.PAUSED
         ]
     }
+
+    def "exportCsv - CSV出力が正常に実行される"() {
+        given: "CSV出力データ"
+        def csvData = "ID,タイトル\n1,テスト本".getBytes("UTF-8")
+        def fileName = "reading-records_20241127_143022.csv"
+
+        when: "CSV出力エンドポイントにアクセス"
+        def result = mockMvc.perform(get("/reading-records/export-csv"))
+
+        then: "CSVデータが正常に返される"
+        1 * mockService.exportToCsv() >> csvData
+        1 * mockService.generateCsvFileName() >> fileName
+        result.andExpect(status().isOk())
+                .andExpect(header().string("Content-Disposition", "attachment; filename=\"${fileName}\""))
+                .andExpect(content().bytes(csvData))
+    }
+
+    def "exportCsv - CSV出力でエラーが発生した場合は500エラーを返す"() {
+        when: "CSV出力エンドポイントにアクセス"
+        def result = mockMvc.perform(get("/reading-records/export-csv"))
+
+        then: "IOExceptionが発生して500エラーが返される"
+        1 * mockService.exportToCsv() >> { throw new IOException("CSV出力エラー") }
+        0 * mockService.generateCsvFileName()
+        result.andExpect(status().isInternalServerError())
+    }
 }

@@ -3,7 +3,12 @@ package com.example.myapplication.controller;
 import com.example.myapplication.entity.ReadingRecord;
 import com.example.myapplication.service.ReadingRecordService;
 import com.example.myapplication.status.ReadingStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,11 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/reading-records")
 public class ReadingRecordController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ReadingRecordController.class);
 
     private static final String STATUSES = "statuses";
     private static final String READING_RECORD = "readingRecord";
@@ -135,5 +143,33 @@ public class ReadingRecordController {
             redirectAttributes.addFlashAttribute("error", "削除中にエラーが発生しました。");
         }
         return REDIRECT;
+    }
+
+    /**
+     * 読書記録CSV出力処理
+     */
+    @GetMapping("/export-csv")
+    public ResponseEntity<byte[]> exportCsv() {
+        try {
+            byte[] csvData = readingRecordService.exportToCsv();
+            String fileName = readingRecordService.generateCsvFileName();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentType(MediaType.parseMediaType("text/csv; charset=UTF-8"))
+                    .body(csvData);
+        } catch (IOException e) {
+            // エラーメッセージをログに出力
+            logger.error("CSVファイルの出力中にエラーが発生しました: {}", e.getMessage(), e);
+
+            // ユーザー向けのエラーメッセージを返す
+            String errorMessage = "CSVファイルの出力中にエラーが発生しました。";
+            return ResponseEntity.internalServerError()
+                    .contentType(MediaType.TEXT_PLAIN)
+                    .body(errorMessage.getBytes());
+        }
     }
 }
