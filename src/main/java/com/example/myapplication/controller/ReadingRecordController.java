@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @Controller
@@ -150,12 +149,12 @@ public class ReadingRecordController {
         try {
             byte[] csvData = readingRecordService.exportToCsv();
             String fileName = readingRecordService.generateCsvFileName();
-            
+
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             headers.setContentDispositionFormData("attachment", fileName);
             headers.add("Content-Type", "text/csv; charset=UTF-8");
-            
+
             return ResponseEntity.ok()
                     .headers(headers)
                     .body(csvData);
