@@ -118,7 +118,6 @@ public class ReadingRecordService {
      * @throws IOException CSV生成時にエラーが発生した場合
      */
     public byte[] exportToCsv() throws IOException {
-        log.info("exportToCsv was called");
 
         List<ReadingRecord> records = getAllReadingRecords();
 
@@ -134,23 +133,36 @@ public class ReadingRecordService {
             // データ行を出力
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             for (ReadingRecord readingRecord : records) {
-                String[] data = {
-                        readingRecord.getId() != null ? readingRecord.getId().toString() : "",
-                        readingRecord.getTitle() != null ? readingRecord.getTitle() : "",
-                        readingRecord.getAuthor() != null ? readingRecord.getAuthor() : "",
-                        readingRecord.getReadingStatus() != null ? readingRecord.getReadingStatus().getDisplayName() : "",
-                        readingRecord.getCurrentPage() != null ? readingRecord.getCurrentPage().toString() : "",
-                        readingRecord.getTotalPages() != null ? readingRecord.getTotalPages().toString() : "",
-                        readingRecord.getSummary() != null ? readingRecord.getSummary() : "",
-                        readingRecord.getThoughts() != null ? readingRecord.getThoughts() : "",
-                        readingRecord.getCreatedAt() != null ? readingRecord.getCreatedAt().format(formatter) : "",
-                        readingRecord.getUpdatedAt() != null ? readingRecord.getUpdatedAt().format(formatter) : ""
-                };
+                String[] data = convertToCsvRow(readingRecord, formatter);
                 csvWriter.writeNext(data);
             }
         }
 
         return outputStream.toByteArray();
+    }
+
+    /**
+     * 読書記録エンティティをCSV1行分の文字列配列に変換します。
+     * <p>
+     * 値がnullの場合は空文字列を入れます。
+     *
+     * @param readingRecord 変換対象の読書記録
+     * @param formatter     日付フォーマット
+     * @return CSV出力用の文字列配列
+     */
+    private String[] convertToCsvRow(ReadingRecord readingRecord, DateTimeFormatter formatter) {
+        return new String[]{
+                readingRecord.getId() != null ? readingRecord.getId().toString() : "",
+                readingRecord.getTitle() != null ? readingRecord.getTitle() : "",
+                readingRecord.getAuthor() != null ? readingRecord.getAuthor() : "",
+                readingRecord.getReadingStatus() != null ? readingRecord.getReadingStatus().getDisplayName() : "",
+                readingRecord.getCurrentPage() != null ? readingRecord.getCurrentPage().toString() : "",
+                readingRecord.getTotalPages() != null ? readingRecord.getTotalPages().toString() : "",
+                readingRecord.getSummary() != null ? readingRecord.getSummary() : "",
+                readingRecord.getThoughts() != null ? readingRecord.getThoughts() : "",
+                readingRecord.getCreatedAt() != null ? readingRecord.getCreatedAt().format(formatter) : "",
+                readingRecord.getUpdatedAt() != null ? readingRecord.getUpdatedAt().format(formatter) : ""
+        };
     }
 
     /**
