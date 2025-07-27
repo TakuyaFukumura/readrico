@@ -223,4 +223,134 @@ class ReadingRecordServiceSpec extends Specification {
         fileName.endsWith(".csv")
         fileName.matches("reading-records_\\d{8}_\\d{6}\\.csv")
     }
+
+    def "parseCsvFile - 有効なCSVファイルを正しく解析する"() {
+        given: "有効なCSVデータ"
+        String csvContent = """ID,タイトル,著者,読書状態,現在ページ,総ページ数,概要,感想
+1,テスト本1,テスト著者1,読書中,100,200,テスト概要1,テスト感想1
+2,テスト本2,テスト著者2,読了,300,300,テスト概要2,テスト感想2"""
+        
+        def mockFile = Mock(org.springframework.web.multipart.MultipartFile) {
+            getInputStream() >> new ByteArrayInputStream(csvContent.getBytes(StandardCharsets.UTF_8))
+            getOriginalFilename() >> "test.csv"
+            isEmpty() >> false
+        }
+
+        when: "CSVファイルを解析"
+        List<ReadingRecord> result = readingRecordService.parseCsvFile(mockFile)
+
+        then: "正しく解析される"
+        result.size() == 2
+        
+        result[0].title == "テスト本1"
+        result[0].author == "テスト著者1"
+        result[0].readingStatus == ReadingStatus.READING
+        result[0].currentPage == 100
+        result[0].totalPages == 200
+        result[0].summary == "テスト概要1"
+        result[0].thoughts == "テスト感想1"
+        
+        result[1].title == "テスト本2"
+        result[1].author == "テスト著者2"
+        result[1].readingStatus == ReadingStatus.COMPLETED
+        result[1].currentPage == 300
+        result[1].totalPages == 300
+        result[1].summary == "テスト概要2"
+        result[1].thoughts == "テスト感想2"
+    }
+
+    def "parseCsvFile - ヘッダーなしのCSVファイルを正しく解析する"() {
+        given: "ヘッダーなしのCSVデータ"
+        String csvContent = """1,テスト本1,テスト著者1,読書中,100,200,テスト概要1,テスト感想1
+2,テスト本2,テスト著者2,未読,0,150,テスト概要2,"""
+        
+        def mockFile = Mock(org.springframework.web.multipart.MultipartFile) {
+            getInputStream() >> new ByteArrayInputStream(csvContent.getBytes(StandardCharsets.UTF_8))
+            getOriginalFilename() >> "test.csv"
+            isEmpty() >> false
+        }
+
+        when: "CSVファイルを解析"
+        List<ReadingRecord> result = readingRecordService.parseCsvFile(mockFile)
+
+        then: "正しく解析される"
+        result.size() == 2
+        result[0].title == "テスト本1"
+        result[1].title == "テスト本2"
+        result[1].readingStatus == ReadingStatus.UNREAD
+        result[1].thoughts == null
+    }
+
+    def "parseCsvFile - 空のCSVファイルの場合は空のリストを返す"() {
+        given: "空のCSVデータ"
+        String csvContent = ""
+        
+        def mockFile = Mock(org.springframework.web.multipart.MultipartFile) {
+            getInputStream() >> new ByteArrayInputStream(csvContent.getBytes(StandardCharsets.UTF_8))
+            getOriginalFilename() >> "empty.csv"
+            isEmpty() >> false
+        }
+
+        when: "空のCSVファイルを解析"
+        List<ReadingRecord> result = readingRecordService.parseCsvFile(mockFile)
+
+        then: "空のリストが返される"
+        result.isEmpty()
+    }
+
+    def "parseCsvFile - 無効な行がある場合はその行をスキップする"() {
+        given: "一部無効なデータを含むCSV"
+        String csvContent = """ID,タイトル,著者,読書状態,現在ページ,総ページ数,概要,感想
+1,テスト本1,テスト著者1,読書中,100,200,テスト概要1,テスト感想1
+2,,テスト著者2,読了,300,300,テスト概要2,テスト感想2
+3,テスト本3,テスト著者3,読了,250,250,テスト概要3,テスト感想3"""
+        
+        def mockFile = Mock(org.springframework.web.multipart.MultipartFile) {
+            getInputStream() >> new ByteArrayInputStream(csvContent.getBytes(StandardCharsets.UTF_8))
+            getOriginalFilename() >> "test.csv"
+            isEmpty() >> false
+        }
+
+        when: "CSVファイルを解析"
+        List<ReadingRecord> result = readingRecordService.parseCsvFile(mockFile)
+
+        then: "有効なレコードのみが返される"
+        result.size() == 2
+        result[0].title == "テスト本1"
+        result[1].title == "テスト本3"
+    }
+
+    def "saveReadingRecords - 読書記録のリストを一括保存する"() {
+        given: "保存する読書記録のリスト"
+        def records = [
+                new ReadingRecord(title: "テスト本1", author: "著者1"),
+                new ReadingRecord(title: "テスト本2", author: "著者2")
+        ]
+        
+        def savedRecords = [
+                new ReadingRecord(id: 1L, title: "テスト本1", author: "著者1"),
+                new ReadingRecord(id: 2L, title: "テスト本2", author: "著者2")
+        ]
+
+        when: "読書記録を一括保存"
+        def result = readingRecordService.saveReadingRecords(records)
+
+        then: "すべてのレコードが保存される"
+        1 * mockRepository.saveAll(_) >> { List<ReadingRecord> args ->
+            def recordsToSave = args[0]
+            // 作成日時と更新日時が設定されていることを確認
+            recordsToSave.each { record ->
+                assert record.createdAt != null
+                assert record.updatedAt != null
+            }
+            return savedRecords
+        }
+        
+        result == savedRecords
+        // 入力されたレコードに日時が設定されていることを確認
+        records.each { record ->
+            record.createdAt != null
+            record.updatedAt != null
+        }
+    }
 }

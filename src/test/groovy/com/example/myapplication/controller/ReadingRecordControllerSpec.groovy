@@ -10,6 +10,7 @@ import spock.lang.Subject
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 /**
@@ -216,5 +217,38 @@ class ReadingRecordControllerSpec extends Specification {
         1 * mockService.exportToCsv() >> { throw new IOException("CSV出力エラー") }
         0 * mockService.generateCsvFileName()
         result.andExpect(status().isInternalServerError())
+    }
+
+    def "upload - CSV一括登録画面を表示する"() {
+        when: "アップロード画面にアクセス"
+        def result = mockMvc.perform(get("/reading-records/upload"))
+
+        then: "正常にレスポンスが返される"
+        result.andExpect(status().isOk())
+                .andExpect(view().name("reading-records/upload"))
+    }
+
+    def "uploadConfirm - 空のCSVファイルの場合はエラーメッセージでリダイレクト"() {
+        when: "空のファイルをアップロード"
+        def result = mockMvc.perform(
+                multipart("/reading-records/upload/confirm")
+                        .file("csvFile", "".getBytes())
+        )
+
+        then: "エラーメッセージでアップロード画面にリダイレクトされる"
+        result.andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/reading-records/upload"))
+    }
+
+    def "uploadSave - 無効なBase64データの場合はエラーでリダイレクト"() {
+        when: "無効なBase64データで保存を実行"
+        def result = mockMvc.perform(
+                post("/reading-records/upload/save")
+                        .param("csvData", "invalid-base64")
+        )
+
+        then: "エラーメッセージでアップロード画面にリダイレクトされる"
+        result.andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/reading-records/upload"))
     }
 }
