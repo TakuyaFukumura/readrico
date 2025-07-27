@@ -43,10 +43,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <!-- Apache Commons CSV：CSV読み書きライブラリ -->
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-csv</artifactId>
-            <version>1.12.0</version>
+            <!-- OpenCSV：CSV読み書きライブラリ -->
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.9</version>
         </dependency>
         
         <!-- Test dependencies -->

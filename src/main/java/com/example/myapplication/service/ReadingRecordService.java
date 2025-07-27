@@ -3,9 +3,8 @@ package com.example.myapplication.service;
 import com.example.myapplication.entity.ReadingRecord;
 import com.example.myapplication.repository.ReadingRecordRepository;
 import com.example.myapplication.status.ReadingStatus;
+import com.opencsv.CSVWriter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -125,27 +124,29 @@ public class ReadingRecordService {
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try (OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
-             CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT.withFirstRecordAsHeader())) {
+             CSVWriter csvWriter = new CSVWriter(writer)) {
 
             // ヘッダー行を設定
-            csvPrinter.printRecord("ID", "タイトル", "著者", "読書状態", "現在ページ", "総ページ数",
-                    "概要", "感想", "作成日時", "更新日時");
+            String[] headers = {"ID", "タイトル", "著者", "読書状態", "現在ページ", "総ページ数",
+                    "概要", "感想", "作成日時", "更新日時"};
+            csvWriter.writeNext(headers);
 
             // データ行を出力
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             for (ReadingRecord readingRecord : records) {
-                csvPrinter.printRecord(
-                        readingRecord.getId(),
-                        readingRecord.getTitle(),
-                        readingRecord.getAuthor(),
-                        readingRecord.getReadingStatus().getDisplayName(),
-                        readingRecord.getCurrentPage(),
-                        readingRecord.getTotalPages(),
-                        readingRecord.getSummary(),
-                        readingRecord.getThoughts(),
+                String[] data = {
+                        readingRecord.getId() != null ? readingRecord.getId().toString() : "",
+                        readingRecord.getTitle() != null ? readingRecord.getTitle() : "",
+                        readingRecord.getAuthor() != null ? readingRecord.getAuthor() : "",
+                        readingRecord.getReadingStatus() != null ? readingRecord.getReadingStatus().getDisplayName() : "",
+                        readingRecord.getCurrentPage() != null ? readingRecord.getCurrentPage().toString() : "",
+                        readingRecord.getTotalPages() != null ? readingRecord.getTotalPages().toString() : "",
+                        readingRecord.getSummary() != null ? readingRecord.getSummary() : "",
+                        readingRecord.getThoughts() != null ? readingRecord.getThoughts() : "",
                         readingRecord.getCreatedAt() != null ? readingRecord.getCreatedAt().format(formatter) : "",
                         readingRecord.getUpdatedAt() != null ? readingRecord.getUpdatedAt().format(formatter) : ""
-                );
+                };
+                csvWriter.writeNext(data);
             }
         }
 

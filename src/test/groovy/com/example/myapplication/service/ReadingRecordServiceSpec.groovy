@@ -195,8 +195,8 @@ class ReadingRecordServiceSpec extends Specification {
 
         // CSVデータを文字列に変換して内容を検証
         String csvContent = new String(csvData, StandardCharsets.UTF_8)
-        csvContent.contains("ID,タイトル,著者,読書状態,現在ページ,総ページ数,概要,感想,作成日時,更新日時")
-        csvContent.contains("1,テスト本1,テスト著者1,読書中,50,100,概要1,感想1,2024-11-27 10:00:00,2024-11-27 11:00:00")
+        csvContent.contains("\"ID\",\"タイトル\",\"著者\",\"読書状態\",\"現在ページ\",\"総ページ数\",\"概要\",\"感想\",\"作成日時\",\"更新日時\"")
+        csvContent.contains("\"1\",\"テスト本1\",\"テスト著者1\",\"読書中\",\"50\",\"100\",\"概要1\",\"感想1\",\"2024-11-27 10:00:00\",\"2024-11-27 11:00:00\"")
     }
 
     def "exportToCsv - 空の読書記録リストでもヘッダーのみのCSVが生成される"() {
@@ -210,8 +210,8 @@ class ReadingRecordServiceSpec extends Specification {
         1 * mockRepository.findAll() >> records
 
         String csvContent = new String(csvData, StandardCharsets.UTF_8)
-        csvContent.contains("ID,タイトル,著者,読書状態,現在ページ,総ページ数,概要,感想,作成日時,更新日時")
-        !csvContent.contains("1,") // データ行が含まれていない
+        csvContent.contains("\"ID\",\"タイトル\",\"著者\",\"読書状態\",\"現在ページ\",\"総ページ数\",\"概要\",\"感想\",\"作成日時\",\"更新日時\"")
+        !csvContent.contains("\"1\",") // データ行が含まれていない
     }
 
     def "generateCsvFileName - CSVファイル名が正しい形式で生成される"() {
