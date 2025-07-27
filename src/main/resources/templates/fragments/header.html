@@ -59,13 +59,5 @@
 
         // ボタンクリックイベント
         darkModeToggle.addEventListener('click', toggleTheme);
-
-        // システムテーマ変更を監視
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-            // ユーザーが明示的に設定していない場合のみシステム設定に従う
-            if (!localStorage.getItem('readrico-theme')) {
-                applyTheme(e.matches ? 'dark' : 'light');
-            }
-        });
     });
 </script>
