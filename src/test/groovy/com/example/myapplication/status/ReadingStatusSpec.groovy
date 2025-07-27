@@ -16,7 +16,7 @@ class ReadingStatusSpec extends Specification {
                 ReadingStatus.READING,
                 ReadingStatus.COMPLETED,
                 ReadingStatus.PAUSED
-        ]
+        ] as ReadingStatus[]
     }
 
     def "ReadingStatus - 各ステータスの表示名が正しく設定されている"() {
