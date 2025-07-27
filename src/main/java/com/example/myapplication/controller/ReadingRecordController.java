@@ -152,10 +152,10 @@ public class ReadingRecordController {
 
             HttpHeaders headers = new HttpHeaders();
             headers.add("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-            headers.add("Content-Type", "text/csv; charset=UTF-8");
 
             return ResponseEntity.ok()
                     .headers(headers)
+                    .contentType(MediaType.parseMediaType("text/csv; charset=UTF-8"))
                     .body(csvData);
         } catch (IOException e) {
             // エラー時は空のレスポンスを返す
