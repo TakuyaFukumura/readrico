@@ -6,7 +6,4 @@ services:
     environment:
       # Spring Boot profiles（必要に応じて）
       - SPRING_PROFILES_ACTIVE=docker
-    volumes:
-      # 開発時のホットリロード用（オプション）
-      - ./target:/app/target:cached
     restart: unless-stopped
