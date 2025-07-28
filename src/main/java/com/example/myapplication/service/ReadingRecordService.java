@@ -368,7 +368,7 @@ public class ReadingRecordService {
     }
 
     /**
-     * 読書記録のリストを一括保存
+     * 読書記録一覧を一括保存
      */
     public List<ReadingRecord> saveReadingRecords(List<ReadingRecord> records) {
         log.info("saveReadingRecords was called with {} records", records.size());
