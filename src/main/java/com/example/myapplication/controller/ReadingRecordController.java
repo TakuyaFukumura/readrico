@@ -251,7 +251,7 @@ public class ReadingRecordController {
                 return REDIRECT_UPLOAD;
             }
 
-            // 一括保存
+            // 一括登録
             List<ReadingRecord> savedRecords = readingRecordService.saveReadingRecords(records);
 
             redirectAttributes.addFlashAttribute("message", 
