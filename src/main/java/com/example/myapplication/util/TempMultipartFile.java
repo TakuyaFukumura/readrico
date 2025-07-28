@@ -4,7 +4,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -57,7 +56,7 @@ public class TempMultipartFile implements MultipartFile {
     }
 
     @Override
-    public void transferTo(File dest) throws IOException {
+    public void transferTo(File dest) {
         throw new UnsupportedOperationException();
     }
 }
