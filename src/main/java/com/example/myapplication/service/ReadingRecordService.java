@@ -264,18 +264,16 @@ public class ReadingRecordService {
         int index = 0;
 
         // 最初の列がIDかどうかを判定（数値の場合はID、そうでなければタイトル）
-        boolean hasIdColumn = false;
-        if (data.length > 0) {
-            try {
-                Long.parseLong(data[0].trim());
-                hasIdColumn = true; // 最初の列が数値の場合はID列とみなす
-            } catch (NumberFormatException e) {
-                hasIdColumn = false; // 数値でない場合はタイトル列とみなす
-            }
+        boolean hasIdColumn;
+        try {
+            Long.parseLong(data[0].trim());
+            hasIdColumn = true; // 最初の列が数値の場合はID列とみなす
+        } catch (NumberFormatException e) {
+            hasIdColumn = false; // 数値でない場合はタイトル列とみなす
         }
 
         // IDがある場合はスキップ
-        if (hasIdColumn && data.length > index) {
+        if (hasIdColumn) {
             index++; // ID列をスキップ
         }
 
