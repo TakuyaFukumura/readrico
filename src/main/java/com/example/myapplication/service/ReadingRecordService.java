@@ -239,7 +239,7 @@ public class ReadingRecordService {
 
         // 最初の列がIDの場合（数値でない場合）、ヘッダー行と判定
         String firstCol = row[0].trim();
-        if (firstCol.equals("ID") || firstCol.equals("id") || firstCol.equals("Id")) {
+        if (firstCol.equalsIgnoreCase("id")) {
             return true;
         }
 
