@@ -182,10 +182,10 @@ public class ReadingRecordService {
     }
 
     /**
-     * CSVファイルを解析して読書記録のリストを返す
+     * CSVファイルを解析して読書記録の一覧を返す
      *
      * @param csvFile アップロードされたCSVファイル
-     * @return 解析された読書記録のリスト
+     * @return 解析された読書記録の一覧
      * @throws IOException CSV読み込み時にエラーが発生した場合
      */
     public List<ReadingRecord> parseCsvFile(MultipartFile csvFile) throws IOException {
@@ -213,9 +213,9 @@ public class ReadingRecordService {
             for (int i = startIndex; i < allData.size(); i++) {
                 String[] data = allData.get(i);
                 try {
-                    ReadingRecord record = parseCsvRow(data);
-                    if (record != null) {
-                        records.add(record);
+                    ReadingRecord readingRecord = parseCsvRow(data);
+                    if (readingRecord != null) {
+                        records.add(readingRecord);
                     }
                 } catch (Exception e) {
                     log.warn("Failed to parse CSV row {}: {}", i + 1, e.getMessage());
@@ -260,7 +260,7 @@ public class ReadingRecordService {
             return null;
         }
 
-        ReadingRecord record = new ReadingRecord();
+        ReadingRecord readingRecord = new ReadingRecord();
         int index = 0;
 
         // 最初の列がIDかどうかを判定（数値の場合はID、そうでなければタイトル）
@@ -281,7 +281,7 @@ public class ReadingRecordService {
 
         // タイトル（必須）
         if (data.length > index && !data[index].trim().isEmpty()) {
-            record.setTitle(data[index].trim());
+            readingRecord.setTitle(data[index].trim());
             index++;
         } else {
             return null; // タイトルが空の場合は無効なレコード
@@ -289,44 +289,44 @@ public class ReadingRecordService {
 
         // 著者
         if (data.length > index) {
-            record.setAuthor(data[index].trim().isEmpty() ? null : data[index].trim());
+            readingRecord.setAuthor(data[index].trim().isEmpty() ? null : data[index].trim());
             index++;
         }
 
         // 読書状態
         if (data.length > index) {
-            record.setReadingStatus(parseReadingStatus(data[index].trim()));
+            readingRecord.setReadingStatus(parseReadingStatus(data[index].trim()));
             index++;
         } else {
-            record.setReadingStatus(ReadingStatus.UNREAD);
+            readingRecord.setReadingStatus(ReadingStatus.UNREAD);
         }
 
         // 現在ページ
         if (data.length > index) {
-            record.setCurrentPage(parseInteger(data[index].trim(), 0));
+            readingRecord.setCurrentPage(parseInteger(data[index].trim(), 0));
             index++;
         } else {
-            record.setCurrentPage(0);
+            readingRecord.setCurrentPage(0);
         }
 
         // 総ページ数
         if (data.length > index) {
-            record.setTotalPages(parseInteger(data[index].trim(), null));
+            readingRecord.setTotalPages(parseInteger(data[index].trim(), null));
             index++;
         }
 
         // 概要
         if (data.length > index) {
-            record.setSummary(data[index].trim().isEmpty() ? null : data[index].trim());
+            readingRecord.setSummary(data[index].trim().isEmpty() ? null : data[index].trim());
             index++;
         }
 
         // 感想
         if (data.length > index) {
-            record.setThoughts(data[index].trim().isEmpty() ? null : data[index].trim());
+            readingRecord.setThoughts(data[index].trim().isEmpty() ? null : data[index].trim());
         }
 
-        return record;
+        return readingRecord;
     }
 
     /**
@@ -378,9 +378,9 @@ public class ReadingRecordService {
         LocalDateTime now = LocalDateTime.now();
 
         // 各レコードに作成日時・更新日時を設定
-        for (ReadingRecord record : records) {
-            record.setCreatedAt(now);
-            record.setUpdatedAt(now);
+        for (ReadingRecord readingRecord : records) {
+            readingRecord.setCreatedAt(now);
+            readingRecord.setUpdatedAt(now);
         }
 
         return readingRecordRepository.saveAll(records);
