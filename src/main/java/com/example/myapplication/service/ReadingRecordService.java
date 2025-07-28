@@ -190,25 +190,25 @@ public class ReadingRecordService {
      */
     public List<ReadingRecord> parseCsvFile(MultipartFile csvFile) throws IOException {
         log.info("parseCsvFile was called with filename: {}", csvFile.getOriginalFilename());
-        
+
         List<ReadingRecord> records = new ArrayList<>();
-        
+
         try (InputStreamReader reader = new InputStreamReader(csvFile.getInputStream(), StandardCharsets.UTF_8);
              CSVReader csvReader = new CSVReader(reader)) {
-            
+
             List<String[]> allData = csvReader.readAll();
-            
+
             if (allData.isEmpty()) {
                 return records;
             }
-            
+
             // ヘッダー行をスキップ（最初の行が項目名の場合）
             int startIndex = 0;
             String[] firstRow = allData.get(0);
             if (isHeaderRow(firstRow)) {
                 startIndex = 1;
             }
-            
+
             // データ行を処理
             for (int i = startIndex; i < allData.size(); i++) {
                 String[] data = allData.get(i);
@@ -226,7 +226,7 @@ public class ReadingRecordService {
             log.error("CSV parsing error: {}", e.getMessage(), e);
             throw new IOException("CSVファイルの解析中にエラーが発生しました: " + e.getMessage(), e);
         }
-        
+
         log.info("Successfully parsed {} records from CSV", records.size());
         return records;
     }
@@ -236,13 +236,13 @@ public class ReadingRecordService {
      */
     private boolean isHeaderRow(String[] row) {
         if (row.length == 0) return false;
-        
+
         // 最初の列がIDの場合（数値でない場合）、ヘッダー行と判定
         String firstCol = row[0].trim();
         if (firstCol.equals("ID") || firstCol.equals("id") || firstCol.equals("Id")) {
             return true;
         }
-        
+
         // 最初の列が数値でない場合もヘッダー行の可能性が高い
         try {
             Long.parseLong(firstCol);
@@ -259,10 +259,10 @@ public class ReadingRecordService {
         if (data.length < 1) { // 最低限タイトルが必要
             return null;
         }
-        
+
         ReadingRecord record = new ReadingRecord();
         int index = 0;
-        
+
         // 最初の列がIDかどうかを判定（数値の場合はID、そうでなければタイトル）
         boolean hasIdColumn = false;
         if (data.length > 0) {
@@ -273,12 +273,12 @@ public class ReadingRecordService {
                 hasIdColumn = false; // 数値でない場合はタイトル列とみなす
             }
         }
-        
+
         // IDがある場合はスキップ
         if (hasIdColumn && data.length > index) {
             index++; // ID列をスキップ
         }
-        
+
         // タイトル（必須）
         if (data.length > index && !data[index].trim().isEmpty()) {
             record.setTitle(data[index].trim());
@@ -286,13 +286,13 @@ public class ReadingRecordService {
         } else {
             return null; // タイトルが空の場合は無効なレコード
         }
-        
+
         // 著者
         if (data.length > index) {
             record.setAuthor(data[index].trim().isEmpty() ? null : data[index].trim());
             index++;
         }
-        
+
         // 読書状態
         if (data.length > index) {
             record.setReadingStatus(parseReadingStatus(data[index].trim()));
@@ -300,7 +300,7 @@ public class ReadingRecordService {
         } else {
             record.setReadingStatus(ReadingStatus.UNREAD);
         }
-        
+
         // 現在ページ
         if (data.length > index) {
             record.setCurrentPage(parseInteger(data[index].trim(), 0));
@@ -308,24 +308,24 @@ public class ReadingRecordService {
         } else {
             record.setCurrentPage(0);
         }
-        
+
         // 総ページ数
         if (data.length > index) {
             record.setTotalPages(parseInteger(data[index].trim(), null));
             index++;
         }
-        
+
         // 概要
         if (data.length > index) {
             record.setSummary(data[index].trim().isEmpty() ? null : data[index].trim());
             index++;
         }
-        
+
         // 感想
         if (data.length > index) {
             record.setThoughts(data[index].trim().isEmpty() ? null : data[index].trim());
         }
-        
+
         return record;
     }
 
@@ -336,14 +336,14 @@ public class ReadingRecordService {
         if (statusStr == null || statusStr.trim().isEmpty()) {
             return ReadingStatus.UNREAD;
         }
-        
+
         // 表示名での変換を試行
         for (ReadingStatus status : ReadingStatus.values()) {
             if (status.getDisplayName().equals(statusStr.trim())) {
                 return status;
             }
         }
-        
+
         // 英語名での変換を試行
         try {
             return ReadingStatus.valueOf(statusStr.trim().toUpperCase());
@@ -360,7 +360,7 @@ public class ReadingRecordService {
         if (str == null || str.trim().isEmpty()) {
             return defaultValue;
         }
-        
+
         try {
             return Integer.parseInt(str.trim());
         } catch (NumberFormatException e) {
@@ -374,15 +374,15 @@ public class ReadingRecordService {
      */
     public List<ReadingRecord> saveReadingRecords(List<ReadingRecord> records) {
         log.info("saveReadingRecords was called with {} records", records.size());
-        
+
         LocalDateTime now = LocalDateTime.now();
-        
+
         // 各レコードに作成日時・更新日時を設定
         for (ReadingRecord record : records) {
             record.setCreatedAt(now);
             record.setUpdatedAt(now);
         }
-        
+
         return readingRecordRepository.saveAll(records);
     }
 }
