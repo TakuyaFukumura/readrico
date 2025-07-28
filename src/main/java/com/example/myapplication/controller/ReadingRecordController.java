@@ -3,6 +3,7 @@ package com.example.myapplication.controller;
 import com.example.myapplication.entity.ReadingRecord;
 import com.example.myapplication.service.ReadingRecordService;
 import com.example.myapplication.status.ReadingStatus;
+import com.example.myapplication.util.TempMultipartFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -259,49 +260,6 @@ public class ReadingRecordController {
             logger.error("CSV一括登録中にエラーが発生しました: {}", e.getMessage(), e);
             redirectAttributes.addFlashAttribute("error", "一括登録中にエラーが発生しました。");
             return "redirect:/reading-records/upload";
-        }
-    }
-
-    /**
-     * 一時的なMultipartFileの実装
-     */
-    private static class TempMultipartFile implements MultipartFile {
-        private final byte[] content;
-        private final String name;
-        private final String contentType;
-
-        public TempMultipartFile(byte[] content, String name, String contentType) {
-            this.content = content;
-            this.name = name;
-            this.contentType = contentType;
-        }
-
-        @Override
-        public String getName() { return name; }
-
-        @Override
-        public String getOriginalFilename() { return name; }
-
-        @Override
-        public String getContentType() { return contentType; }
-
-        @Override
-        public boolean isEmpty() { return content.length == 0; }
-
-        @Override
-        public long getSize() { return content.length; }
-
-        @Override
-        public byte[] getBytes() { return content; }
-
-        @Override
-        public java.io.InputStream getInputStream() {
-            return new java.io.ByteArrayInputStream(content);
-        }
-
-        @Override
-        public void transferTo(java.io.File dest) throws IOException {
-            throw new UnsupportedOperationException();
         }
     }
 }
