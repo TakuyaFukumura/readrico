@@ -236,8 +236,7 @@ public class ReadingRecordController {
      * CSV一括登録実行処理
      */
     @PostMapping("/upload/save")
-    public String uploadSave(@RequestParam("csvData") String csvData, 
-                             RedirectAttributes redirectAttributes) {
+    public String uploadSave(@RequestParam("csvData") String csvData, RedirectAttributes redirectAttributes) {
         try {
             // Base64デコードしてCSVデータを復元
             byte[] decodedData = Base64.getDecoder().decode(csvData);
