@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
@@ -297,11 +299,11 @@ public class ReadingRecordController {
 
         @Override
         public java.io.InputStream getInputStream() {
-            return new java.io.ByteArrayInputStream(content);
+            return new ByteArrayInputStream(content);
         }
 
         @Override
-        public void transferTo(java.io.File dest) throws IOException {
+        public void transferTo(File dest) throws IOException {
             throw new UnsupportedOperationException();
         }
     }
