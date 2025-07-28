@@ -35,6 +35,7 @@ public class ReadingRecordController {
     private static final String STATUSES = "statuses";
     private static final String READING_RECORD = "readingRecord";
     private static final String REDIRECT = "redirect:/reading-records";
+    private static final String REDIRECT_UPLOAD = "redirect:/reading-records/upload";
 
     private final ReadingRecordService readingRecordService;
 
@@ -196,12 +197,12 @@ public class ReadingRecordController {
             // ファイルの基本チェック
             if (csvFile.isEmpty()) {
                 redirectAttributes.addFlashAttribute("error", "ファイルが選択されていません。");
-                return "redirect:/reading-records/upload";
+                return REDIRECT_UPLOAD;
             }
 
             if (!csvFile.getOriginalFilename().toLowerCase().endsWith(".csv")) {
                 redirectAttributes.addFlashAttribute("error", "CSVファイルを選択してください。");
-                return "redirect:/reading-records/upload";
+                return REDIRECT_UPLOAD;
             }
 
             // CSVファイルを解析
@@ -209,7 +210,7 @@ public class ReadingRecordController {
 
             if (records.isEmpty()) {
                 redirectAttributes.addFlashAttribute("error", "有効なデータが見つかりませんでした。");
-                return "redirect:/reading-records/upload";
+                return REDIRECT_UPLOAD;
             }
 
             // CSVデータをBase64エンコードして保持
@@ -223,11 +224,11 @@ public class ReadingRecordController {
         } catch (IOException e) {
             logger.error("CSVファイルの読み込み中にエラーが発生しました: {}", e.getMessage(), e);
             redirectAttributes.addFlashAttribute("error", "CSVファイルの読み込み中にエラーが発生しました。");
-            return "redirect:/reading-records/upload";
+            return REDIRECT_UPLOAD;
         } catch (Exception e) {
             logger.error("予期しないエラーが発生しました: {}", e.getMessage(), e);
             redirectAttributes.addFlashAttribute("error", "予期しないエラーが発生しました。");
-            return "redirect:/reading-records/upload";
+            return REDIRECT_UPLOAD;
         }
     }
 
@@ -246,7 +247,7 @@ public class ReadingRecordController {
 
             if (records.isEmpty()) {
                 redirectAttributes.addFlashAttribute("error", "有効なデータが見つかりませんでした。");
-                return "redirect:/reading-records/upload";
+                return REDIRECT_UPLOAD;
             }
 
             // 一括保存
@@ -259,7 +260,7 @@ public class ReadingRecordController {
         } catch (Exception e) {
             logger.error("CSV一括登録中にエラーが発生しました: {}", e.getMessage(), e);
             redirectAttributes.addFlashAttribute("error", "一括登録中にエラーが発生しました。");
-            return "redirect:/reading-records/upload";
+            return REDIRECT_UPLOAD;
         }
     }
 }
