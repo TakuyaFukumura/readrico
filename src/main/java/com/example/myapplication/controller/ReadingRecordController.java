@@ -200,7 +200,8 @@ public class ReadingRecordController {
                 return REDIRECT_UPLOAD;
             }
 
-            if (!csvFile.getOriginalFilename().toLowerCase().endsWith(".csv")) {
+            String filename = csvFile.getOriginalFilename();
+            if (filename == null || !filename.toLowerCase().endsWith(".csv")) {
                 redirectAttributes.addFlashAttribute("error", "CSVファイルを選択してください。");
                 return REDIRECT_UPLOAD;
             }
