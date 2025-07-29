@@ -3,6 +3,7 @@ package com.example.myapplication.controller;
 import com.example.myapplication.entity.ReadingRecord;
 import com.example.myapplication.service.ReadingRecordService;
 import com.example.myapplication.status.ReadingStatus;
+import com.example.myapplication.util.TempMultipartFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -31,6 +35,7 @@ public class ReadingRecordController {
     private static final String STATUSES = "statuses";
     private static final String READING_RECORD = "readingRecord";
     private static final String REDIRECT = "redirect:/reading-records";
+    private static final String REDIRECT_UPLOAD = "redirect:/reading-records/upload";
 
     private final ReadingRecordService readingRecordService;
 
@@ -170,6 +175,93 @@ public class ReadingRecordController {
             return ResponseEntity.internalServerError()
                     .contentType(MediaType.TEXT_PLAIN)
                     .body(errorMessage.getBytes());
+        }
+    }
+
+    /**
+     * CSVアップロード画面
+     */
+    @GetMapping("/upload")
+    public String upload() {
+        return "reading-records/upload";
+    }
+
+    /**
+     * CSVファイル確認処理
+     */
+    @PostMapping("/upload/confirm")
+    public String uploadConfirm(@RequestParam("csvFile") MultipartFile csvFile, 
+                                Model model, 
+                                RedirectAttributes redirectAttributes) {
+        try {
+            // ファイルの基本チェック
+            if (csvFile.isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "ファイルが選択されていません。");
+                return REDIRECT_UPLOAD;
+            }
+
+            String filename = csvFile.getOriginalFilename();
+            if (filename == null || !filename.toLowerCase().endsWith(".csv")) {
+                redirectAttributes.addFlashAttribute("error", "CSVファイルを選択してください。");
+                return REDIRECT_UPLOAD;
+            }
+
+            // CSVファイルを解析
+            List<ReadingRecord> records = readingRecordService.parseCsvFile(csvFile);
+
+            if (records.isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "有効なデータが見つかりませんでした。");
+                return REDIRECT_UPLOAD;
+            }
+
+            // CSVデータをBase64エンコードして保持
+            String csvData = Base64.getEncoder().encodeToString(csvFile.getBytes());
+
+            model.addAttribute("readingRecords", records);
+            model.addAttribute("csvData", csvData);
+
+            return "reading-records/upload-confirm";
+
+        } catch (IOException e) {
+            logger.error("CSVファイルの読み込み中にエラーが発生しました: {}", e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("error", "CSVファイルの読み込み中にエラーが発生しました。");
+            return REDIRECT_UPLOAD;
+        } catch (Exception e) {
+            logger.error("予期しないエラーが発生しました: {}", e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("error", "予期しないエラーが発生しました。");
+            return REDIRECT_UPLOAD;
+        }
+    }
+
+    /**
+     * CSV一括登録実行処理
+     */
+    @PostMapping("/upload/save")
+    public String uploadSave(@RequestParam("csvData") String csvData, RedirectAttributes redirectAttributes) {
+        try {
+            // Base64デコードしてCSVデータを復元
+            byte[] decodedData = Base64.getDecoder().decode(csvData);
+            
+            // 一時的なMultipartFileを作成して再解析
+            MultipartFile tempFile = new TempMultipartFile(decodedData, "temp.csv", "text/csv");
+            List<ReadingRecord> records = readingRecordService.parseCsvFile(tempFile);
+
+            if (records.isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "有効なデータが見つかりませんでした。");
+                return REDIRECT_UPLOAD;
+            }
+
+            // 一括登録
+            List<ReadingRecord> savedRecords = readingRecordService.saveReadingRecords(records);
+
+            redirectAttributes.addFlashAttribute("message", 
+                savedRecords.size() + "件の読書記録を登録しました。");
+            return REDIRECT;
+
+        } catch (Exception e) {
+            logger.error("CSV一括登録中にエラーが発生しました: {}", e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("error", "一括登録中にエラーが発生しました。");
+            return REDIRECT_UPLOAD;
         }
     }
 }
