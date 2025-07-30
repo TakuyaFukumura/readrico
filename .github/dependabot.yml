@@ -32,3 +32,18 @@ updates:
     open-pull-requests-limit: 5
     # セキュリティアップデートも含める
     insecure-external-code-execution: deny
+  # GitHub Actionsの更新設定
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Tokyo"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    assignees:
+      - "TakuyaFukumura"
+    open-pull-requests-limit: 5
+    insecure-external-code-execution: deny
