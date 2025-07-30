@@ -47,3 +47,18 @@ updates:
       - "TakuyaFukumura"
     open-pull-requests-limit: 5
     insecure-external-code-execution: deny
+  # Dockerイメージの依存関係自動更新設定
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Tokyo"
+    labels:
+      - "dependencies"
+      - "docker"
+    assignees:
+      - "TakuyaFukumura"
+    open-pull-requests-limit: 5
+    insecure-external-code-execution: deny
