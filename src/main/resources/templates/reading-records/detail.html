@@ -51,6 +51,18 @@
                         </div>
                     </div>
 
+                    <div class="mb-4" th:if="${readingRecord.rating != null and readingRecord.rating > 0}">
+                        <label for="rating" class="form-label fw-bold text-secondary">評価</label>
+                        <div id="rating" class="p-3 rounded border">
+                            <div class="star-rating">
+                                <span th:each="i : ${#numbers.sequence(1, 5)}" 
+                                      th:class="${i <= readingRecord.rating} ? 'star filled' : 'star'" 
+                                      style="font-size: 1.5rem; color: #ffc107;">★</span>
+                                <span class="ms-2 text-muted" th:text="${readingRecord.rating} + '/5'"></span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="mb-4" th:if="${readingRecord.totalPages != null and readingRecord.totalPages > 0}">
                         <label for="progress" class="form-label fw-bold text-secondary">読書進捗</label>
                         <div class="p-3 rounded border">
