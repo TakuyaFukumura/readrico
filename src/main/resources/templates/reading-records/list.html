@@ -82,12 +82,10 @@
                             <div class="card-body">
                                 <a th:href="@{/reading-records/{id}(id=${record.id})}" class="text-decoration-none">
                                     <h5 class="card-title text-body" th:text="${record.title}">タイトル</h5>
-                                    <p class="card-text text-muted small" 
-                                       th:if="${record.rating != null}"
-                                       th:text="'評価: ' + ${record.rating} + '/5'"></p>
-                                    <p class="card-text text-muted small" 
-                                       th:if="${record.rating == null}">評価: 未設定</p>
-                                    <div class="text-success small" 
+                                    <p class="card-text text-muted small"
+                                       th:text="${record.rating == null} ?
+                                       '評価: 未設定' : '評価: ' + ${record.rating} + '/5'"></p>
+                                    <div class="text-success small"
                                          th:if="${record.totalPages != null and record.totalPages > 0}"
                                          th:text="${record.currentPage} + '/' + ${record.totalPages} + 'ページ'">
                                     </div>
