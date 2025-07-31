@@ -55,11 +55,11 @@
                                             th:selected="${status == readingRecord.readingStatus}">状態</option>
                                 </select>
                             </div>
-                            
+
                             <div class="mb-3">
                                 <label for="rating" class="form-label">評価</label>
                                 <div class="star-rating-input">
-                                    <input type="hidden" id="rating" th:field="*{rating}" />
+                                    <input type="hidden" id="rating" th:field="*{rating}"/>
                                     <div id="star-display" class="mb-2">
                                         <span class="star-clickable" data-rating="1">★</span>
                                         <span class="star-clickable" data-rating="2">★</span>
@@ -67,7 +67,8 @@
                                         <span class="star-clickable" data-rating="4">★</span>
                                         <span class="star-clickable" data-rating="5">★</span>
                                         <button type="button" class="btn btn-sm btn-outline-secondary ms-2"
-                                                id="clear-rating">クリア</button>
+                                                id="clear-rating">クリア
+                                        </button>
                                     </div>
                                     <small class="form-text text-muted">星をクリックして評価を設定してください（1-5段階）</small>
                                 </div>
