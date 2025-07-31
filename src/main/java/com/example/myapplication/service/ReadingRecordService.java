@@ -132,7 +132,7 @@ public class ReadingRecordService {
 
             // ヘッダー行を設定
             String[] headers = {"ID", "タイトル", "著者", "読書状態", "現在ページ", "総ページ数",
-                    "概要", "感想", "作成日時", "更新日時"};
+                    "評価", "概要", "感想", "作成日時", "更新日時"};
             csvWriter.writeNext(headers);
 
             // データ行を出力
@@ -163,6 +163,7 @@ public class ReadingRecordService {
                 readingRecord.getReadingStatus() != null ? readingRecord.getReadingStatus().getDisplayName() : "",
                 readingRecord.getCurrentPage() != null ? readingRecord.getCurrentPage().toString() : "",
                 readingRecord.getTotalPages() != null ? readingRecord.getTotalPages().toString() : "",
+                readingRecord.getRating() != null ? readingRecord.getRating().toString() : "",
                 readingRecord.getSummary() != null ? readingRecord.getSummary() : "",
                 readingRecord.getThoughts() != null ? readingRecord.getThoughts() : "",
                 readingRecord.getCreatedAt() != null ? readingRecord.getCreatedAt().format(formatter) : "",
@@ -313,6 +314,12 @@ public class ReadingRecordService {
             index++;
         }
 
+        // 評価
+        if (data.length > index) {
+            readingRecord.setRating(parseRating(data[index].trim()));
+            index++;
+        }
+
         // 概要
         if (data.length > index) {
             readingRecord.setSummary(data[index].trim().isEmpty() ? null : data[index].trim());
@@ -364,6 +371,28 @@ public class ReadingRecordService {
         } catch (NumberFormatException e) {
             log.warn("Failed to parse integer: {}, using default: {}", str, defaultValue);
             return defaultValue;
+        }
+    }
+
+    /**
+     * 文字列を評価（1-5）に変換（範囲外の場合はnullを返す）
+     */
+    private Integer parseRating(String str) {
+        if (str == null || str.trim().isEmpty()) {
+            return null;
+        }
+
+        try {
+            int rating = Integer.parseInt(str.trim());
+            if (rating >= 1 && rating <= 5) {
+                return rating;
+            } else {
+                log.warn("Rating out of range (1-5): {}, setting to null", rating);
+                return null;
+            }
+        } catch (NumberFormatException e) {
+            log.warn("Failed to parse rating: {}, setting to null", str);
+            return null;
         }
     }
 

@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS reading_record (
     reading_status VARCHAR(20) NOT NULL DEFAULT 'UNREAD',
     current_page INTEGER DEFAULT 0,
     total_pages INTEGER,
+    rating INTEGER,
     summary TEXT,
     thoughts TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
