@@ -1,0 +1,10 @@
+.star-clickable {
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #ccc;
+}
+
+.star-clickable.selected,
+.star-clickable.active {
+    color: #ffc107;
+}
