@@ -37,6 +37,8 @@ public class ReadingRecord {
     @Column(name = "total_pages")
     private Integer totalPages;
 
+    private Integer rating;
+
     @Column(columnDefinition = "TEXT")
     private String summary;
 

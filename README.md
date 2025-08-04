@@ -1,5 +1,11 @@
 # Readrico
 
+![Build](https://github.com/TakuyaFukumura/readrico/workflows/Build/badge.svg)
+![Version](https://img.shields.io/badge/version-0.9.0-blue)
+![Java](https://img.shields.io/badge/Java-17-orange)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.3-brightgreen)
+![Maven](https://img.shields.io/badge/Maven-build-red)
+
 読書記録を管理するWebアプリケーションです。本のタイトル、著者、読書進捗、感想などを記録・管理できます。
 
 ## 概要
