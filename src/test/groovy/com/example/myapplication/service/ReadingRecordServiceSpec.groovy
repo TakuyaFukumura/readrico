@@ -195,8 +195,8 @@ class ReadingRecordServiceSpec extends Specification {
 
         // CSVデータを文字列に変換して内容を検証
         String csvContent = new String(csvData, StandardCharsets.UTF_8)
-        csvContent.contains("\"ID\",\"タイトル\",\"著者\",\"読書状態\",\"現在ページ\",\"総ページ数\",\"概要\",\"感想\",\"作成日時\",\"更新日時\"")
-        csvContent.contains("\"1\",\"テスト本1\",\"テスト著者1\",\"読書中\",\"50\",\"100\",\"概要1\",\"感想1\",\"2024-11-27 10:00:00\",\"2024-11-27 11:00:00\"")
+        csvContent.contains("\"ID\",\"タイトル\",\"著者\",\"読書状態\",\"現在ページ\",\"総ページ数\",\"評価\",\"概要\",\"感想\",\"作成日時\",\"更新日時\"")
+        csvContent.contains("\"1\",\"テスト本1\",\"テスト著者1\",\"読書中\",\"50\",\"100\",\"\",\"概要1\",\"感想1\",\"2024-11-27 10:00:00\",\"2024-11-27 11:00:00\"")
     }
 
     def "exportToCsv - 空の読書記録リストでもヘッダーのみのCSVが生成される"() {
@@ -210,7 +210,7 @@ class ReadingRecordServiceSpec extends Specification {
         1 * mockRepository.findAll() >> records
 
         String csvContent = new String(csvData, StandardCharsets.UTF_8)
-        csvContent.contains("\"ID\",\"タイトル\",\"著者\",\"読書状態\",\"現在ページ\",\"総ページ数\",\"概要\",\"感想\",\"作成日時\",\"更新日時\"")
+        csvContent.contains("\"ID\",\"タイトル\",\"著者\",\"読書状態\",\"現在ページ\",\"総ページ数\",\"評価\",\"概要\",\"感想\",\"作成日時\",\"更新日時\"")
         !csvContent.contains("\"1\",") // データ行が含まれていない
     }
 
@@ -226,9 +226,9 @@ class ReadingRecordServiceSpec extends Specification {
 
     def "parseCsvFile - 有効なCSVファイルを正しく解析する"() {
         given: "有効なCSVデータ"
-        String csvContent = """ID,タイトル,著者,読書状態,現在ページ,総ページ数,概要,感想
-1,テスト本1,テスト著者1,読書中,100,200,テスト概要1,テスト感想1
-2,テスト本2,テスト著者2,読了,300,300,テスト概要2,テスト感想2"""
+        String csvContent = """ID,タイトル,著者,読書状態,現在ページ,総ページ数,評価,概要,感想
+1,テスト本1,テスト著者1,読書中,100,200,4,テスト概要1,テスト感想1
+2,テスト本2,テスト著者2,読了,300,300,5,テスト概要2,テスト感想2"""
         
         def mockFile = Mock(org.springframework.web.multipart.MultipartFile) {
             getInputStream() >> new ByteArrayInputStream(csvContent.getBytes(StandardCharsets.UTF_8))
@@ -247,6 +247,7 @@ class ReadingRecordServiceSpec extends Specification {
         result[0].readingStatus == ReadingStatus.READING
         result[0].currentPage == 100
         result[0].totalPages == 200
+        result[0].rating == 4
         result[0].summary == "テスト概要1"
         result[0].thoughts == "テスト感想1"
         
@@ -255,14 +256,15 @@ class ReadingRecordServiceSpec extends Specification {
         result[1].readingStatus == ReadingStatus.COMPLETED
         result[1].currentPage == 300
         result[1].totalPages == 300
+        result[1].rating == 5
         result[1].summary == "テスト概要2"
         result[1].thoughts == "テスト感想2"
     }
 
     def "parseCsvFile - ヘッダーなしのCSVファイルを正しく解析する"() {
         given: "ヘッダーなしのCSVデータ"
-        String csvContent = """1,テスト本1,テスト著者1,読書中,100,200,テスト概要1,テスト感想1
-2,テスト本2,テスト著者2,未読,0,150,テスト概要2,"""
+        String csvContent = """1,テスト本1,テスト著者1,読書中,100,200,3,テスト概要1,テスト感想1
+2,テスト本2,テスト著者2,未読,0,150,,テスト概要2,"""
         
         def mockFile = Mock(org.springframework.web.multipart.MultipartFile) {
             getInputStream() >> new ByteArrayInputStream(csvContent.getBytes(StandardCharsets.UTF_8))
@@ -276,8 +278,10 @@ class ReadingRecordServiceSpec extends Specification {
         then: "正しく解析される"
         result.size() == 2
         result[0].title == "テスト本1"
+        result[0].rating == 3
         result[1].title == "テスト本2"
         result[1].readingStatus == ReadingStatus.UNREAD
+        result[1].rating == null
         result[1].thoughts == null
     }
 
@@ -352,5 +356,32 @@ class ReadingRecordServiceSpec extends Specification {
             record.createdAt != null
             record.updatedAt != null
         }
+    }
+
+    def "parseCsvFile - 評価値のバリデーションテスト"() {
+        given: "評価値が含まれたCSVデータ"
+        String csvContent = """ID,タイトル,著者,読書状態,現在ページ,総ページ数,評価,概要,感想
+1,テスト本1,著者1,読了,100,100,5,概要1,感想1
+2,テスト本2,著者2,読了,200,200,0,概要2,感想2
+3,テスト本3,著者3,読了,300,300,6,概要3,感想3
+4,テスト本4,著者4,読了,400,400,abc,概要4,感想4
+5,テスト本5,著者5,読了,500,500,,概要5,感想5"""
+        
+        def mockFile = Mock(org.springframework.web.multipart.MultipartFile) {
+            getInputStream() >> new ByteArrayInputStream(csvContent.getBytes(StandardCharsets.UTF_8))
+            getOriginalFilename() >> "test.csv"
+            isEmpty() >> false
+        }
+
+        when: "CSVファイルを解析"
+        List<ReadingRecord> result = readingRecordService.parseCsvFile(mockFile)
+
+        then: "評価値が正しく処理される"
+        result.size() == 5
+        result[0].rating == 5      // 有効な評価値
+        result[1].rating == null   // 範囲外（0）はnull
+        result[2].rating == null   // 範囲外（6）はnull
+        result[3].rating == null   // 文字列はnull
+        result[4].rating == null   // 空文字はnull
     }
 }
