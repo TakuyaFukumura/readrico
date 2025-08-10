@@ -412,4 +412,12 @@ public class ReadingRecordService {
 
         return readingRecordRepository.saveAll(records);
     }
+
+    /**
+     * 全ての読書記録を削除
+     */
+    public void deleteAllReadingRecords() {
+        log.info("deleteAllReadingRecords was called");
+        readingRecordRepository.deleteAll();
+    }
 }
