@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>設定 - Readrico</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body>
+    <!-- ヘッダー -->
+    <th:block th:replace="~{fragments/header :: header}"></th:block>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-4">⚙️ 設定</h1>
+
+                <!-- メッセージ表示 -->
+                <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <span th:text="${message}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="閉じる"></button>
+                </div>
+
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <span th:text="${error}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="閉じる"></button>
+                </div>
+
+                <!-- データ管理セクション -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">📊 データ管理</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <h6>全データ削除</h6>
+                                <p class="text-muted small">
+                                    この操作により、全ての読書記録が永続的に削除されます。<br>
+                                    削除されたデータは復旧できませんので、実行前に必要に応じてCSVエクスポートを行ってください。
+                                </p>
+                                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteAllModal">
+                                    🗑️ 全ての読書記録を削除
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- その他の操作 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">📝 その他の操作</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>データのエクスポート</h6>
+                                <p class="text-muted small">
+                                    現在の読書記録をCSV形式でダウンロードできます。
+                                </p>
+                                <a href="/reading-records/export-csv" class="btn btn-outline-primary">
+                                    📥 CSVエクスポート
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>データのインポート</h6>
+                                <p class="text-muted small">
+                                    CSV形式のファイルから読書記録を一括登録できます。
+                                </p>
+                                <a href="/reading-records/upload" class="btn btn-outline-success">
+                                    📤 CSVアップロード
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全削除確認モーダル -->
+    <div class="modal fade" id="deleteAllModal" tabindex="-1" aria-labelledby="deleteAllModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteAllModalLabel">⚠️ 全データ削除の確認</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="閉じる"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning" role="alert">
+                        <strong>重要:</strong> この操作は元に戻すことができません。
+                    </div>
+                    <p>本当に<strong>全ての読書記録</strong>を削除しますか？</p>
+                    <p class="text-muted small">
+                        削除される内容:
+                        <br>• 登録済みの全ての書籍情報
+                        <br>• 読書進捗情報
+                        <br>• 評価・感想などの個人データ
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                    <form method="post" action="/settings/delete-all" class="d-inline">
+                        <button type="submit" class="btn btn-danger">🗑️ 削除を実行</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
+
+    <!-- ダークモードスクリプト -->
+    <th:block th:replace="~{fragments/header :: darkModeScript}"></th:block>
+</body>
+</html>
