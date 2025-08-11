@@ -1,213 +1,213 @@
-# Readrico - Japanese Reading Record Management Application
+# Readrico - 日本語読書記録管理アプリケーション
 
-Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.
+予期しない情報に遭遇した場合にのみ、検索やbashコマンドにフォールバックし、まずはこれらの手順書を参照してください。
 
-## Project Overview
+## プロジェクト概要
 
-Readrico is a Spring Boot web application for managing reading records (読書記録). Users can track books they're reading, their progress, ratings, and thoughts. The application uses Java 17, Spring Boot 3.5.4, H2 in-memory database, Thymeleaf templating, and Bootstrap for the UI.
+Readricoは読書記録を管理するSpring Bootウェブアプリケーションです。ユーザーは読書中の本、進捗、評価、感想を追跡できます。アプリケーションはJava 17、Spring Boot 3.5.4、H2インメモリデータベース、Thymeleafテンプレート、BootstrapによるUIを使用しています。
 
-## Working Effectively
+## 効果的な作業方法
 
-### Prerequisites and Environment Setup
-- Java 17+ is required (OpenJDK 17.0.16 available in environment)
-- Maven is managed via Maven Wrapper (./mvnw) - no separate Maven installation needed
-- Docker available for containerized deployment
+### 前提条件と環境設定
+- Java 17+が必要です（環境にOpenJDK 17.0.16が利用可能）
+- MavenはMaven Wrapper (./mvnw)で管理されています - 別途Mavenのインストールは不要
+- コンテナ化されたデプロイメントのためにDockerが利用可能
 
-### Build Commands and Timing
-**CRITICAL**: Never cancel Maven builds - they can take several minutes on first run due to dependency downloads.
+### ビルドコマンドとタイミング
+**重要**: Mavenビルドを中断しないでください - 初回実行時は依存関係のダウンロードにより数分かかることがあります。
 
-- **Clean compile** (first time setup with downloads):
+- **クリーンコンパイル**（初回セットアップとダウンロード）:
   ```bash
   ./mvnw clean compile
   ```
-  - Takes approximately 3 minutes on first run (downloads dependencies)
-  - NEVER CANCEL: Set timeout to 300+ seconds (5+ minutes)
-  
-- **Package build** (without tests):
+  - 初回実行時は約3分かかります（依存関係をダウンロード）
+  - 中断厳禁: タイムアウトを300秒以上（5分以上）に設定
+
+- **パッケージビルド**（テストなし）:
   ```bash
   ./mvnw clean package -DskipTests
   ```
-  - Takes approximately 1.5 minutes after initial dependency download
-  - NEVER CANCEL: Set timeout to 180+ seconds (3+ minutes)
+  - 初期依存関係ダウンロード後は約1.5分
+  - 中断厳禁: タイムアウトを180秒以上（3分以上）に設定
 
-- **Full build with tests**:
+- **フルビルド（テスト含む）**:
   ```bash
   ./mvnw clean package
   ```
-  - Tests complete in ~8-15 seconds (104 Spock tests)
-  - Total build time: ~7-8 seconds after dependencies are cached
-  - NEVER CANCEL: Set timeout to 180+ seconds (3+ minutes) to account for dependency downloads
+  - テスト完了まで約8-15秒（104個のSpockテスト）
+  - 依存関係キャッシュ後の総ビルド時間: 約7-8秒
+  - 中断厳禁: 依存関係ダウンロードを考慮してタイムアウトを180秒以上（3分以上）に設定
 
-### Running the Application
+### アプリケーション実行
 
-- **Via Maven (development)**:
+- **Maven経由（開発用）**:
   ```bash
   ./mvnw spring-boot:run
   ```
-  - Application starts on port 8080
-  - Startup takes ~3 seconds
-  - Access at http://localhost:8080
+  - アプリケーションはポート8080で開始
+  - 起動時間は約3秒
+  - http://localhost:8080でアクセス
 
-- **Via JAR file**:
+- **JARファイル経由**:
   ```bash
   java -jar target/readrico.jar
   ```
-  - Must build first: `./mvnw clean package`
-  - Same startup behavior as Maven
+  - 事前にビルドが必要: `./mvnw clean package`
+  - Mavenと同じ起動動作
 
-### Testing
+### テスト
 
-- **Run all tests**:
+- **全テスト実行**:
   ```bash
   ./mvnw test
   ```
-  - 104 tests using Spock framework (Groovy)
-  - Takes 10-15 seconds to complete
-  - All tests should pass
+  - Spockフレームワーク（Groovy）を使用した104個のテスト
+  - 完了まで10-15秒
+  - 全てのテストが成功する必要があります
 
-- **Test categories**: Service layer, controller layer, entity validation, status enums
-- No additional linting or code formatting tools are configured
+- **テストカテゴリ**: サービス層、コントローラ層、エンティティ検証、ステータス列挙型
+- 追加のリンターやコードフォーマットツールは設定されていません
 
-### Docker Deployment
+### Docker デプロイメント
 
-- **Build Docker image** (requires pre-built JAR):
+- **Dockerイメージビルド**（事前にJARファイルが必要）:
   ```bash
   ./mvnw clean package -DskipTests
   docker build -t readrico .
   ```
-  - Docker build takes ~3 seconds after JAR is ready
-  - Uses Eclipse Temurin 21 JRE Alpine base image
+  - JAR準備後のDockerビルドは約3秒
+  - Eclipse Temurin 21 JRE Alpineベースイメージを使用
 
-- **Docker Compose deployment**:
+- **Docker Compose デプロイメント**:
   ```bash
   docker compose up --build
   ```
-  - Builds and starts application
-  - Takes ~3 seconds total
-  - Access at http://localhost:8080
+  - アプリケーションをビルドして開始
+  - 合計約3秒
+  - http://localhost:8080でアクセス
 
-- **Stop Docker Compose**:
+- **Docker Compose停止**:
   ```bash
   docker compose down
   ```
 
-## Validation
+## 検証
 
-### Manual Testing Requirements
-**ALWAYS** perform these validation steps after making changes:
+### 手動テスト要件
+変更後は**必ず**以下の検証手順を実行してください:
 
-1. **Application startup verification**:
-   - Start application and verify it reaches "Started Main in X.X seconds"
-   - Check http://localhost:8080 returns homepage HTML with title "Readrico - 読書記録アプリ"
-   - Verify http://localhost:8080/reading-records shows reading records interface
+1. **アプリケーション起動確認**:
+   - アプリケーションを開始し「Started Main in X.X seconds」に到達することを確認
+   - http://localhost:8080がタイトル「Readrico - 読書記録アプリ」のホームページHTMLを返すことを確認
+   - http://localhost:8080/reading-recordsで読書記録インターフェースが表示されることを確認
 
-2. **Core functionality testing**:
-   - Navigate to reading records list: http://localhost:8080/reading-records
-   - Verify tabs show different reading statuses (未読, 読書中, 読了, 中止) with counts
-   - Check sample data loads correctly (should show Japanese book titles like "銀河鉄道の夜", "雪国")
-   - Test new record creation: http://localhost:8080/reading-records/new (should show title "読書記録登録")
-   - Verify H2 console accessible: http://localhost:8080/h2-console (redirects to login page)
+2. **コア機能テスト**:
+   - 読書記録一覧に移動: http://localhost:8080/reading-records
+   - 異なる読書ステータス（未読、読書中、読了、中止）のタブとカウントが表示されることを確認
+   - サンプルデータが正しく読み込まれることを確認（「銀河鉄道の夜」、「雪国」などの日本語書籍タイトルが表示される）
+   - 新規レコード作成をテスト: http://localhost:8080/reading-records/new（タイトル「読書記録登録」が表示される）
+   - H2コンソールがアクセス可能であることを確認: http://localhost:8080/h2-console（ログインページにリダイレクト）
 
-3. **Database connectivity testing**:
-   - H2 Console URL: http://localhost:8080/h2-console
+3. **データベース接続テスト**:
+   - H2コンソールURL: http://localhost:8080/h2-console
    - JDBC URL: jdbc:h2:mem:testdb
-   - Username: sa
-   - Password: (blank)
-   - Should show reading_record table with sample data
+   - ユーザー名: sa
+   - パスワード: （空白）
+   - サンプルデータを含むreading_recordテーブルが表示される
 
-4. **Build artifact verification**:
-   - Check JAR file is created: `ls -lh target/readrico.jar` (should be ~58MB)
-   - Verify JAR can run: `java -jar target/readrico.jar` (starts Spring Boot app)
+4. **ビルド成果物確認**:
+   - JARファイルが作成されることを確認: `ls -lh target/readrico.jar`（約58MBになる）
+   - JARが実行可能であることを確認: `java -jar target/readrico.jar`（Spring Bootアプリが開始）
 
-5. **Test execution verification**:
-   - Always run `./mvnw test` before final validation
-   - Verify all 104 tests pass (Spock framework)
-   - Look for any new test failures related to your changes
+5. **テスト実行確認**:
+   - 最終検証前に必ず`./mvnw test`を実行
+   - 104個のテストが全て成功することを確認（Spockフレームワーク）
+   - 変更に関連する新しいテスト失敗がないか確認
 
-### CI/CD Validation
-The GitHub Actions workflow (`.github/workflows/build.yml`) runs:
-- Java 17 setup with Amazon Corretto
-- Maven build: `mvn clean package`
-- Always ensure your changes don't break the CI build
+### CI/CD 検証
+GitHub Actionsワークフロー（`.github/workflows/build.yml`）は以下を実行します:
+- Amazon CorrettoでJava 17セットアップ
+- Mavenビルド: `mvn clean package`
+- 変更がCIビルドを壊さないことを必ず確認
 
-## Key Application Features
+## 主要アプリケーション機能
 
-### Reading Status Management
-- **UNREAD** (未読): Books not yet started
-- **READING** (読書中): Currently reading books  
-- **COMPLETED** (読了): Finished books
-- **PAUSED** (中止): Books on hold/discontinued
+### 読書ステータス管理
+- **UNREAD**（未読）: まだ読み始めていない本
+- **READING**（読書中）: 現在読んでいる本
+- **COMPLETED**（読了）: 読み終えた本
+- **PAUSED**（中止）: 保留中/中断した本
 
-### Core Functionality
-- Add/edit/delete reading records
-- Track reading progress (current page / total pages)
-- Record book ratings (1-5 scale)
-- Add thoughts and summaries
-- CSV export/import functionality
-- Dark mode toggle
+### コア機能
+- 読書記録の追加/編集/削除
+- 読書進捗の追跡（現在のページ / 総ページ数）
+- 本の評価記録（1-5段階）
+- 感想と要約の追加
+- CSV エクスポート/インポート機能
+- ダークモード切り替え
 
-## Project Structure
+## プロジェクト構成
 
-### Source Code Organization
+### ソースコード構成
 ```
 src/main/java/com/example/myapplication/
-├── Main.java                          # Application entry point
-├── controller/                        # Web controllers
-│   ├── IndexController.java          # Homepage
-│   └── ReadingRecordController.java  # CRUD operations
-├── entity/                           # JPA entities
-│   └── ReadingRecord.java           # Main data model
-├── repository/                       # Data access layer
-│   └── ReadingRecordRepository.java # JPA repository
-├── service/                          # Business logic
-│   └── ReadingRecordService.java    # Core service layer
-├── status/                           # Enums
-│   └── ReadingStatus.java           # Reading status enum
-└── util/                            # Utilities
-    └── TempMultipartFile.java       # File handling
+├── Main.java                          # アプリケーションエントリーポイント
+├── controller/                        # ウェブコントローラ
+│   ├── IndexController.java          # ホームページ
+│   └── ReadingRecordController.java  # CRUD操作
+├── entity/                           # JPAエンティティ
+│   └── ReadingRecord.java           # メインデータモデル
+├── repository/                       # データアクセス層
+│   └── ReadingRecordRepository.java # JPAリポジトリ
+├── service/                          # ビジネスロジック
+│   └── ReadingRecordService.java    # コアサービス層
+├── status/                           # 列挙型
+│   └── ReadingStatus.java           # 読書ステータス列挙型
+└── util/                            # ユーティリティ
+    └── TempMultipartFile.java       # ファイル処理
 ```
 
-### Resources
-- `application.properties`: Database and application configuration
-- `schema.sql`: Database table definitions
-- `data.sql`: Sample data initialization
-- `templates/`: Thymeleaf HTML templates for web UI
+### リソース
+- `application.properties`: データベースとアプリケーション設定
+- `schema.sql`: データベーステーブル定義
+- `data.sql`: サンプルデータ初期化
+- `templates/`: ウェブUI用Thymeleaf HTMLテンプレート
 
-### Test Structure
-- `src/test/groovy/`: Spock framework tests (104 total)
-- All tests should pass; investigate any new failures
+### テスト構成
+- `src/test/groovy/`: Spockフレームワークテスト（総数104個）
+- 全てのテストが成功する必要があります; 新しい失敗を調査してください
 
-## Common Troubleshooting
+## よくあるトラブルシューティング
 
-### Build Issues
-- If builds fail with dependency issues, clear Maven cache: `rm -rf ~/.m2/repository`
-- If tests fail unexpectedly, check if H2 database initialization is working
-- Ensure Java 17 is being used: `java -version` (should show OpenJDK 17.0.16)
-- If Maven wrapper fails: `chmod +x mvnw` to ensure executable permissions
+### ビルド問題
+- 依存関係問題でビルドが失敗する場合、Mavenキャッシュをクリア: `rm -rf ~/.m2/repository`
+- テストが予期せず失敗する場合、H2データベース初期化が動作しているか確認
+- Java 17が使用されていることを確認: `java -version`（OpenJDK 17.0.16と表示されるべき）
+- Maven wrapperが失敗する場合: `chmod +x mvnw`で実行権限を確認
 
-### Runtime Issues  
-- If port 8080 is busy: `lsof -ti:8080` to find processes, `pkill -f spring-boot:run` to stop
-- If H2 console doesn't work: Check application.properties has `spring.h2.console.enabled=true`
-- If Japanese text appears garbled: Ensure UTF-8 encoding in templates
-- If application won't start: Check for "Address already in use" errors and kill existing processes
+### ランタイム問題
+- ポート8080が使用中の場合: `lsof -ti:8080`でプロセスを確認、`pkill -f spring-boot:run`で停止
+- H2コンソールが動作しない場合: application.propertiesに`spring.h2.console.enabled=true`があることを確認
+- 日本語テキストが文字化けする場合: テンプレートでUTF-8エンコーディングを確認
+- アプリケーションが起動しない場合: 「Address already in use」エラーを確認し、既存プロセスを終了
 
-### Docker Issues
-- Ensure JAR file exists before Docker build: `./mvnw clean package`
-- If container won't start: Check Docker logs with `docker logs <container_name>`
-- If Docker Compose fails: Try `docker compose down` then `docker compose up --build`
+### Docker 問題
+- Dockerビルド前にJARファイルが存在することを確認: `./mvnw clean package`
+- コンテナが起動しない場合: `docker logs <container_name>`でDockerログを確認
+- Docker Composeが失敗する場合: `docker compose down`してから`docker compose up --build`を試す
 
-## Repository Files Overview
+## リポジトリファイル概要
 
-### Key Files
-- `README.md`: Comprehensive documentation in Japanese
-- `pom.xml`: Maven build configuration with all dependencies
-- `Dockerfile`: Multi-stage Docker build setup
-- `docker-compose.yml`: Simple service definition
-- `.github/workflows/build.yml`: CI/CD pipeline
+### 主要ファイル
+- `README.md`: 日本語での包括的なドキュメント
+- `pom.xml`: 全依存関係を含むMavenビルド設定
+- `Dockerfile`: マルチステージDockerビルド設定
+- `docker-compose.yml`: シンプルなサービス定義
+- `.github/workflows/build.yml`: CI/CDパイプライン
 
-### Sample Output from Common Commands
+### 一般的なコマンドのサンプル出力
 
-#### ls -la (repository root)
+#### ls -la（リポジトリルート）
 ```
 total 76
 -rw-r--r-- 1 runner docker   311 .gitignore
@@ -219,55 +219,55 @@ total 76
 -rw-r--r-- 1 runner docker  4546 pom.xml
 ```
 
-#### Application startup logs
+#### アプリケーション起動ログ
 ```
 Started Main in 2.995 seconds (process running for 3.3)
 Tomcat started on port 8080 (http) with context path '/'
 H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
 ```
 
-## Development Best Practices
+## 開発ベストプラクティス
 
-- Always test both Maven and Docker deployment methods after changes
-- Check all HTTP endpoints return expected content (not just status codes)
-- Verify Japanese text displays correctly in web interface
-- Run full test suite before committing changes
-- Use H2 console to inspect database state when debugging
+- 変更後は必ずMavenとDockerの両方のデプロイ方法をテスト
+- HTTPエンドポイントが期待されるコンテンツを返すことを確認（ステータスコードだけでなく）
+- ウェブインターフェースで日本語テキストが正しく表示されることを確認
+- 変更をコミットする前にフルテストスイートを実行
+- デバッグ時はH2コンソールでデータベース状態を検査
 
-## Quick Reference Commands
+## クイックリファレンスコマンド
 
-### Essential Commands (Copy-Paste Ready)
+### 基本コマンド（コピー＆ペースト可能）
 ```bash
-# Build and test (most common workflow)
+# ビルドとテスト（最も一般的なワークフロー）
 ./mvnw clean package
 java -jar target/readrico.jar
 
-# Development server
+# 開発サーバー
 ./mvnw spring-boot:run
 
-# Tests only
+# テストのみ
 ./mvnw test
 
-# Docker deployment
+# Docker デプロイメント
 ./mvnw clean package -DskipTests
 docker compose up --build
 
-# Clean up
+# クリーンアップ
 pkill -f spring-boot:run
 docker compose down
 ```
 
-### Status Check Commands
+### ステータス確認コマンド
 ```bash
-# Check if app is running
+# アプリが実行中かチェック
 curl -I http://localhost:8080
 
-# Check main page content
+# メインページコンテンツチェック
 curl -s http://localhost:8080 | grep -o "<title>.*</title>"
 
-# Verify build artifacts
+# ビルド成果物確認
 ls -lh target/readrico.jar
 
-# Check Java version
+# Javaバージョン確認
 java -version
 ```
