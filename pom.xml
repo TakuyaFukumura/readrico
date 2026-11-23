@@ -60,7 +60,7 @@
             <!-- Groovy：動的プログラミング言語 -->
             <groupId>org.apache.groovy</groupId>
             <artifactId>groovy</artifactId>
-            <version>5.0.3</version>
+            <version>6.0.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
